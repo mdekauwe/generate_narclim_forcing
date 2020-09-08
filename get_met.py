@@ -41,7 +41,8 @@ def get_data(fn, var):
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     #cols = ['Tair','Qair','Precip']
-    cols = ['tas','huss', 'pracc']
+    #cols = ['tas','huss', 'pracc']
+    cols = ['tas','huss']
     nyears = 19
     df_out = pd.DataFrame(columns=cols)
 
@@ -65,13 +66,12 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         # tas, huss, wss, rsds, rlds, pracc, ps
 
-        frames = [df1, df2, df3]
+        #frames = [df1, df2, df3]
+        frames = [df1, df2]
         result = pd.concat(frames)
-        
-        print(result)
+
         df_out = df_out.append(result)
-        print(df_out)
-        sys.exit()
+        
 
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
