@@ -36,9 +36,9 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
             print(ds.lat.values[0:10,0])
             print(ds.lon.values[0:10,0])
 
-            x = ds.sel(longitude=lon, latitude=lat, method='nearest')
+            x = ds.sel(lon=lon, lat=lat, method='nearest')
             print(x)
-            
+
             sys.exit()
 
 
