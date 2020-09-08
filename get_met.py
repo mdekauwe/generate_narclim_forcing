@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
 """
-Not decided yet...
+For each time slice, GCM, RCM loop through and collect up all the met data
+we need to generate a forcing file for CABLE-hydraulics simulations.
+
+TODO:
+- will need to get lat/lon pairs from euc species list.
+- add netcdf creation for output
+- need to interpolate some vars, e.g. tair is hourly, radiation is 3-hourly
 
 That's all folks.
 """
