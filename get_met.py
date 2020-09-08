@@ -38,25 +38,32 @@ def get_data(fn, var):
 
     return data
 
-def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
+def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     nyears = 19
-    df_tas = pd.DataFrame(columns=['date','tas'])
+    df_out = pd.DataFrame(columns=['date','tas'])
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
         st += 1
         tag = "%d-%d" % (st, st)
 
-        if var == "tas":
-            fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        else:
-            raise("not implemented for ... ")
+        print("tair")
+        var = "tas" # air temp
+        fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        df1 = get_data(fn, var)
 
-        df = get_data(fn, var)
-        df_tas = df_tas.append(df)
+        print("qair")
+        var = "huss" # Qair
+        fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        df2 = get_data(fn, var)
 
-    df_tas.to_csv("tas.csv", index=True)
+
+        frames = [df1, df2]
+        result = pd.concat(frames)
+        df_tas = df_tas.append(result)
+
+    df_out.to_csv("test.csv", index=True)
 
     sys.exit()
 
@@ -78,7 +85,7 @@ if __name__ == "__main__":
     domains = ['d01','d02']
 
     domain = domains[0] # whole of aus
-    var = "tas"
+
 
     for slice in time_slices:
 
@@ -99,4 +106,4 @@ if __name__ == "__main__":
                     os.makedirs(odir4)
 
                 path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-                main(path, slice, GCM, RCM, domain, odir4, var, lat, lon)
+                main(path, slice, GCM, RCM, domain, odir4, lat, lon)
