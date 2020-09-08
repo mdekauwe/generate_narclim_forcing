@@ -44,7 +44,7 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
             ii = find_nearest(lats, lat)
             jj = find_nearest(lons, lon)
             tas = ds.tas[:,ii,jj].to_dataframe()
-            tas = df.drop(['lat', 'lon'], axis=1)
+            tas = tas.drop(['lat', 'lon'], axis=1)
 
             df_out = df_out.append(tas)
 
