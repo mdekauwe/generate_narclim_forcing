@@ -39,7 +39,7 @@ def get_data(fn, var):
     return data
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
-    
+
     cols = ['tas','huss','pracc']
     nyears = 19
     df_out = pd.DataFrame(columns=cols)
@@ -61,6 +61,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df3 = get_data(fn, var)
 
+        # precip has 30 min timsteps in its index, even thought hourly
+        df3.index = df2.index
         # tas, huss, wss, rsds, rlds, pracc, ps
 
         #frames = [df1, df2, df3]
@@ -112,7 +114,7 @@ if __name__ == "__main__":
                 os.makedirs(odir3)
 
             for RCM in RCMs:
-                print(slice, GCM, RCM)
+
                 odir4 = os.path.join(odir3, RCM)
                 if not os.path.exists(odir4):
                     os.makedirs(odir4)
