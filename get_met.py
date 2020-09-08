@@ -30,7 +30,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     st = int(slice.split("-")[0])
     for i in range(nyears):
 
-        print("hourly: %d:%d" % (i, nyears)
+        print("hourly: %d:%d" % (i, nyears))
         tag = "%d-%d" % (st, st)
 
         var = "tas" # air temp
@@ -72,7 +72,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     nyears = 4 # 5 year file segments
     st = int(slice.split("-")[0])
     for i in range(nyears):
-        
+
         tag = "%d-%d" % (st, st+4)
 
         var = "rlds" # LWdown
