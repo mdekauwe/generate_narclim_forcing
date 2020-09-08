@@ -61,7 +61,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df3 = get_data(fn, var)
 
-        # precip has 30 min timsteps in its index, even thought hourly
+        # someone has written the precip with a 30 min timestep (e.g. 06:30:00
+        # instead of 06:00:00), even though it is hourly, use the Qair index
         df3.index = df2.index
         # tas, huss, wss, rsds, rlds, pracc, ps
 
