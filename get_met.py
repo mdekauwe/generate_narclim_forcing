@@ -41,29 +41,33 @@ def get_data(fn, var):
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     nyears = 19
-    df_out = pd.DataFrame(columns=['date','tas'])
+    df_out = pd.DataFrame(columns=['tair','qair','precip'])
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
         st += 1
         tag = "%d-%d" % (st, st)
 
-        print("tair")
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df1 = get_data(fn, var)
 
-        print("qair")
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df2 = get_data(fn, var)
 
+        var = "pracc" # precip
+        fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        df3 = get_data(fn, var)
 
-        frames = [df1, df2]
+        # tas, huss, wss, rsds, rlds, pracc, ps
+
+        frames = [df1, df2, df3]
         result = pd.concat(frames)
         df_out = df_out.append(result)
 
-    df_out.to_csv("test.csv", index=True)
+    df_out['date'] = pd.to_datetime(df_out.index)
+    df_out.to_csv("test.csv", index=False)
 
     sys.exit()
 
