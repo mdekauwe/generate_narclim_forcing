@@ -23,7 +23,7 @@ import pandas as pd
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
-    """
+    
     cols = ['tas','huss','pracc', 'wss', 'ps']
     dfx = pd.DataFrame(columns=cols)
 
@@ -64,7 +64,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         dfx = dfx.append(result)
 
         st += 1
-    """
+
 
     print("3-hourly")
 
@@ -80,8 +80,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         var = "rlds" # LWdown
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
-        print(fn)
-        sys.exit()
         df6 = get_data(fn, var)
 
         # We need to turn the 3hly data into hrly, linearly interpolate...
