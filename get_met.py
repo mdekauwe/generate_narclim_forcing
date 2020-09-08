@@ -40,7 +40,7 @@ def get_data(fn, var):
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
-    cols = ['tas','huss','pracc', 'wss', 'ps']
+    cols = ['tas','huss','pracc', 'wss', 'ps', 'rlds']
     nyears = 19
     df_out = pd.DataFrame(columns=cols)
 
@@ -72,7 +72,15 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df5 = get_data(fn, var)
 
-        frames = [df1, df2, df3, df4, df5]
+        var = "rlds" # LWdown
+        fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
+        df6 = get_data(fn, var)
+
+        i = pd.DatetimeIndex(start=df4['wss'].index[0],
+                             end=df4['wss'].index[-1], freq='H')
+        df6 = df6.reindex(i).interpolate()
+
+        frames = [df1, df2, df3, df4, df5, df6]
         result = pd.concat(frames, axis=1)
 
         df_out = df_out.append(result)
@@ -82,7 +90,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     cols = ['date'] + cols
     df_out = df_out[cols]
     df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Precip',
-                           'wss':'Wind', 'ps':'Psurf'},
+                           'wss':'Wind', 'ps':'Psurf', 'rlds':'LWdown'},
                   inplace=True)
     df_out.to_csv("test.csv", index=False)
 
