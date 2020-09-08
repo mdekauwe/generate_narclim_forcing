@@ -9,14 +9,12 @@ __author__ = "Martin De Kauwe"
 __version__ = "1.0 (08.09.2020)"
 __email__ = "mdekauwe@gmail.com"
 
-import pandas as pd
 import sys
-import numpy as np
-import matplotlib.pyplot as plt
 import os
-import cartopy.crs as ccrs
-import matplotlib.patches as mpatches
+import numpy as np
 import xarray as xr
+import pandas as pd
+
 
 def main(path, slice, GCM, RCM, domain, odir4, var):
 
@@ -33,7 +31,7 @@ def main(path, slice, GCM, RCM, domain, odir4, var):
 
             sys.exit()
 
-            
+
 
 if __name__ == "__main__":
 

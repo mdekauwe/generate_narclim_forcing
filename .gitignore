@@ -1,1 +1,4 @@
 *.nc
+data/*
+*.png
+*.csv
