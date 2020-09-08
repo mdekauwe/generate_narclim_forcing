@@ -66,7 +66,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         # tas, huss, wss, rsds, rlds, pracc, ps
 
         #frames = [df1, df2, df3]
-        frames = [df1, df2]
+        frames = [df1, df2, df3]
         result = pd.concat(frames, axis=1)
 
         df_out = df_out.append(result)
@@ -75,7 +75,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
     df_out = df_out[cols]
-    df_out.rename(columns={'tas':'Tair', 'huss':'Qair'}, inplace=True)
+    df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Precip'},
+                  inplace=True)
     df_out.to_csv("test.csv", index=False)
 
     sys.exit()
