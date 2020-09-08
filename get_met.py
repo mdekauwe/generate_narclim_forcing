@@ -41,7 +41,7 @@ def get_data(fn, var):
 def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
     nyears = 19
-    df_tas = pd.DataFrame(columns=['tas'])
+    df_tas = pd.DataFrame(columns=['date','tas'])
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
