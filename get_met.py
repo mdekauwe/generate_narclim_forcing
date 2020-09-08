@@ -65,11 +65,11 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         frames = [df1, df2, df3]
         result = pd.concat(frames)
-        print(results)
+        print(result)
         df_out = df_out.append(result)
         print(df_out)
         sys.exit()
-        
+
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
     df_out = df_out[cols]
