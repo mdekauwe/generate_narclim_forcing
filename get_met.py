@@ -41,7 +41,7 @@ def get_data(fn, var):
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     nyears = 19
-    df_out = pd.DataFrame(columns=['tair','qair','precip'])
+    df_out = pd.DataFrame(columns=['Tair','Qair','Precip'])
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
