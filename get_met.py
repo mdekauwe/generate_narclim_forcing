@@ -39,10 +39,8 @@ def get_data(fn, var):
     return data
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
-
-    #cols = ['Tair','Qair','Precip']
-    #cols = ['tas','huss', 'pracc']
-    cols = ['tas','huss']
+    
+    cols = ['tas','huss','pracc']
     nyears = 19
     df_out = pd.DataFrame(columns=cols)
 
