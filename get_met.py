@@ -44,7 +44,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     cols = ['tas','huss','pracc', 'wss', 'ps']
     nyears = 20
-    df_out = pd.DataFrame(columns=cols)
+    dfx = pd.DataFrame(columns=cols)
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
@@ -77,14 +77,14 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
 
-        df_out = df_out.append(result)
+        dfx = dfx.append(result)
 
         st += 1
 
     # Radiation data is 3-hrly and concatenated into 5 year chunks...
     cols = ['rlds','rsds']
     nyears = 4 # 5 year file segments
-    df_out2 = pd.DataFrame(columns=cols)
+    dfy = pd.DataFrame(columns=cols)
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
@@ -100,7 +100,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
                              end=df4['wss'].index[-1], freq='H')
         df6 = df6.reindex(i).interpolate()
 
-        var = "rsds" # LWdown
+        var = "rsds" # SWdown
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
         df7 = get_data(fn, var)
 
@@ -110,16 +110,21 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         frames = [df6, df7]
         result = pd.concat(frames, axis=1)
 
-        df_out2 = df_out2.append(result)
+        dfy = dfy.append(result)
         st += 5
 
-    sys.exit()
+    print(df_out2)
+
+    # Join the hourly and the interpolated hourly data.
+    frames = [dfx, dfy]
+    df_out = pd.concat(frames, axis=1)
 
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
     df_out = df_out[cols]
     df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Precip',
-                           'wss':'Wind', 'ps':'Psurf', 'rlds':'LWdown'},
+                           'wss':'Wind', 'ps':'Psurf', 'rlds':'LWdown',
+                           'rsds':'SWdown'},
                   inplace=True)
     df_out.to_csv("test.csv", index=False)
 
