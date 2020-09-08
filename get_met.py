@@ -23,7 +23,7 @@ import pandas as pd
 
 def find_nearest(a, b):
     idx = np.argmin(np.abs(a-b))
-    
+
     return idx
 
 
@@ -40,18 +40,21 @@ def get_data(fn, var):
 
 def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
+    nyears = 19
     df_tas = pd.DataFrame(columns=['tas'])
 
     st = int(slice.split("-")[0])
-    for i in range(19):
+    for i in range(nyears):
         st += 1
         tag = "%d-%d" % (st, st)
 
         if var == "tas":
             fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        else:
+            raise("not implemented for ... ")
 
-         df = get_data(fn, var)
-         df_tas = df_tas.append(df)
+        df = get_data(fn, var)
+        df_tas = df_tas.append(df)
 
     df_tas.to_csv("tas.csv", index=True)
 
