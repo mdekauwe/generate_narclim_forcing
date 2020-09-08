@@ -36,15 +36,18 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
             print(ds.lat.values[0:10,0])
             print(ds.lon.values[0:10,0])
 
+            x = ds.sel(longitude=lon, latitude=lat, method='nearest')
+            print(x)
+            
             sys.exit()
 
 
 
 if __name__ == "__main__":
 
-    # test loc -> Eucalyptus accedens,-29.25,114.75
-    lat = -29.25
-    lon = 144.75
+    # test loc -> Eucalyptus accedens
+    lat = -29.07
+    lon = 114.87
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
