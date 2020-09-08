@@ -61,7 +61,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         frames = [df1, df2]
         result = pd.concat(frames)
-        df_tas = df_tas.append(result)
+        df_out = df_out.append(result)
 
     df_out.to_csv("test.csv", index=True)
 
