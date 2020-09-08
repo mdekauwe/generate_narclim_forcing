@@ -66,8 +66,10 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         # tas, huss, wss, rsds, rlds, pracc, ps
 
         #frames = [df1, df2, df3]
-        frames = [df1, df2]
-        result = pd.concat(frames)
+        #frames = [df1, df2]
+        #result = pd.concat(frames)
+        result = pd.merge(df1, df1, how='inner', left_index=True,
+                          right_index=True)
         print(result)
         df_out = df_out.append(result)
         print(df_out)
