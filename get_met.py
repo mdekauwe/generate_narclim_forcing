@@ -35,8 +35,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        print(fn)
-        sys.exit()
+        
         df1 = get_data(fn, var)
 
         var = "huss" # Qair
@@ -83,8 +82,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         print("3-hourly interp")
         # We need to turn the 3hly data into hrly, linearly interpolate...
-        i = pd.DatetimeIndex(df1['tas'].index[0], df1['tas'].index[-1],
-                             freq='H')
+        i = pd.date_range(start=df1['tas'].index[0],
+                          end=df1['tas'].index[-1], freq='H')
         df6 = df6.reindex(i).interpolate()
 
         var = "rsds" # SWdown
