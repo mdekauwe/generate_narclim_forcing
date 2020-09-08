@@ -53,11 +53,12 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df1 = get_data(fn, var)
+        print(df1)
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df2 = get_data(fn, var)
-
+        print(df2)
         #var = "pracc" # precip
         #fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         #df3 = get_data(fn, var)
