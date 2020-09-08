@@ -35,7 +35,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        
+
         df1 = get_data(fn, var)
 
         var = "huss" # Qair
@@ -99,8 +99,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         dfy = dfy.append(result)
         st += 5
 
-    print(df_out2)
-    sys.exit()
 
     # Join the hourly and the interpolated hourly data.
     frames = [dfx, dfy]
