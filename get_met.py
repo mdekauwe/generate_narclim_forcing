@@ -21,35 +21,16 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 
-def find_nearest(a, b):
-    idx = np.argmin(np.abs(a-b))
-
-    return idx
-
-
-def get_data(fn, var):
-    ds = xr.open_dataset(fn)
-    lats = ds.lat[:,0].values # 2D arrays, squeeze
-    lons = ds.lon[0,:].values # 2D arrays, squeeze
-    ii = find_nearest(lats, lat)
-    jj = find_nearest(lons, lon)
-    data = ds[var][:,ii,jj].to_dataframe()
-    data = data.drop(['lat', 'lon'], axis=1)
-
-    return data
-
-
-
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     cols = ['tas','huss','pracc', 'wss', 'ps']
-    nyears = 20
     dfx = pd.DataFrame(columns=cols)
 
-    print("hourly")
+    nyears = 20
     st = int(slice.split("-")[0])
     for i in range(nyears):
 
+        print("hourly: %d:%d" % (i, nyears)
         tag = "%d-%d" % (st, st)
 
         var = "tas" # air temp
@@ -86,12 +67,12 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     # Radiation data is 3-hrly and concatenated into 5 year chunks...
     cols = ['rlds','rsds']
-    nyears = 4 # 5 year file segments
     dfy = pd.DataFrame(columns=cols)
 
+    nyears = 4 # 5 year file segments
     st = int(slice.split("-")[0])
     for i in range(nyears):
-
+        
         tag = "%d-%d" % (st, st+4)
 
         var = "rlds" # LWdown
@@ -133,6 +114,24 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     df_out.to_csv("test.csv", index=False)
 
     sys.exit()
+
+def find_nearest(a, b):
+    idx = np.argmin(np.abs(a-b))
+
+    return idx
+
+def get_data(fn, var):
+    ds = xr.open_dataset(fn)
+    lats = ds.lat[:,0].values # 2D arrays, squeeze
+    lons = ds.lon[0,:].values # 2D arrays, squeeze
+    ii = find_nearest(lats, lat)
+    jj = find_nearest(lons, lon)
+    data = ds[var][:,ii,jj].to_dataframe()
+    data = data.drop(['lat', 'lon'], axis=1)
+    ds.close()
+
+    return data
+
 
 if __name__ == "__main__":
 
