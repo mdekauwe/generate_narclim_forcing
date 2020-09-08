@@ -38,19 +38,17 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df1 = get_data(fn, var)
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df1 = df1.shift(periods=3)
-        df1[var][0:3] = df1[var][4] # fill the first three NaNs we added
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df1 = df1.shift(periods=10)
+        df1[var][0:10] = df1[var][11] # fill the first NaNs we added
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df2 = get_data(fn, var)
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df2 = df2.shift(periods=3)
-        df2[var][0:3] = df2[var][4] # fill the first three NaNs we added
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df2= df2.shift(periods=10)
+        df2[var][0:10] = df2[var][11] # fill the first NaNs we added
 
         var = "pracc" # precip
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -59,28 +57,25 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         # instead of 06:00:00), even though it is hourly, use the Qair index
         df3.index = df2.index
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df3 = df3.shift(periods=3)
-        df3[var][0:3] = 0.0 # fill the first three NaNs we added
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df3 = df3.shift(periods=10)
+        df3[var][0:10] = 0.0 # fill the first NaNs we added
 
         var = "wss" # wind
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df4 = get_data(fn, var)
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df4 = df4.shift(periods=3)
-        df4[var][0:3] = df4[var][4] # fill the first three NaNs we added
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df4 = df4.shift(periods=10)
+        df4[var][0:10] = df4[var][11] # fill the first NaNs we added
 
         var = "ps" # pressure
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df5 = get_data(fn, var)
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df5 = df5.shift(periods=3)
-        df5[var][0:3] = df5[var][4] # fill the first three NaNs we added
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df5 = df5.shift(periods=10)
+        df5[var][0:10] = df5[var][11] # fill the first NaNs we added
 
         frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
@@ -106,10 +101,9 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
         df6 = get_data(fn, var)
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df6 = df6.shift(periods=3)
-        df6[var][0:3] = df6[var][4] # fill the first three NaNs we added
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df6 = df6.shift(periods=10)
+        df6[var][0:10] = df6[var][11] # fill the NaNs we added
 
         # We need to turn the 3hly data into hrly, linearly interpolate...
         i = pd.date_range(start=df6['rlds'].index[0],
@@ -120,10 +114,9 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
         df7 = get_data(fn, var)
 
-        # Seems to be a time offset issue, shift the radiation so that the sun
-        # comes out during the day
-        df7 = df7.shift(periods=3)
-        df7[var][0:3] = 0.0 # fill the first three NaNs we just introduced
+        # There is a time offset issue as it is in UTC, so need to +10 hours
+        df7 = df7.shift(periods=10)
+        df7[var][0:10] = 0.0 # fill the NaNs we added
 
         # We need to turn the 3hly data into hrly, linearly interpolate...
         df7 = df7.reindex(i).interpolate(method='linear')
@@ -145,17 +138,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
                            'wss':'Wind', 'ps':'Psurf', 'rlds':'LWdown',
                            'rsds':'SWdown'},
                   inplace=True)
-
-    # Last two values are missing due to shift
-    df_out["LWdown"][-2] = df_out["LWdown"][-3]
-    df_out["LWdown"][-1] = df_out["LWdown"][-3]
-    #df_out.loc[-2, "LWdown"] = df_out["LWdown"][-3]
-    #df_out.loc[-1, "LWdown"] = df_out["LWdown"][-3]
-
-    # Last two values are missing due to shift
-    df_out["SWdown"][-2] = 0.0
-    df_out["SWdown"][-1] = 0.0
-    #df_out.loc[-1, "SWdown"] = 0.0
 
     df_out.to_csv("test.csv", index=False)
 
