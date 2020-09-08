@@ -21,6 +21,9 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 
+def find_nearest(a, b):
+    idx = np.argmin(np.abs(a-b))
+    return idx
 
 def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
@@ -33,13 +36,13 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
             fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
             print(fn)
             ds = xr.open_dataset(fn)
-            print(ds.lat.values[0:10,0])
-            print(ds.lon.values[0:10,0])
 
-            x = ds.sel_points(lon=lon, lat=lat, method='nearest')
-            print(x)
-            df = x[vars].to_dataframe()
-            print(df)
+            lats = ds.lat[:,0].values
+            lons = ds.lon[0,:].values
+            ii = find_nearest(lats, lat)
+            jj = find_nearest(lons, lon)
+            tas = ds.tas[:,ii,jj].to_dataframe()
+
             sys.exit()
 
 
