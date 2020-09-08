@@ -40,7 +40,7 @@ def get_data(fn, var):
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
-    cols = ['tas','huss','pracc']
+    cols = ['tas','huss','pracc', 'wss', 'ps']
     nyears = 19
     df_out = pd.DataFrame(columns=cols)
 
@@ -60,14 +60,19 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         var = "pracc" # precip
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df3 = get_data(fn, var)
-
         # someone has written the precip with a 30 min timestep (e.g. 06:30:00
         # instead of 06:00:00), even though it is hourly, use the Qair index
         df3.index = df2.index
-        # tas, huss, wss, rsds, rlds, pracc, ps
 
-        #frames = [df1, df2, df3]
-        frames = [df1, df2, df3]
+        var = "wss" # wind
+        fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        df4 = get_data(fn, var)
+
+        var = "ps" # pressure
+        fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        df5 = get_data(fn, var)
+
+        frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
 
         df_out = df_out.append(result)
@@ -76,7 +81,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
     df_out = df_out[cols]
-    df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Precip'},
+    df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Precip',
+                           'wss':'Wind', 'ps':'Psurf'},
                   inplace=True)
     df_out.to_csv("test.csv", index=False)
 
