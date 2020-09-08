@@ -25,9 +25,21 @@ def find_nearest(a, b):
     idx = np.argmin(np.abs(a-b))
     return idx
 
+
+def get_data(fn, var):
+    ds = xr.open_dataset(fn)
+    lats = ds.lat[:,0].values # 2D arrays, squeeze
+    lons = ds.lon[0,:].values # 2D arrays, squeeze
+    ii = find_nearest(lats, lat)
+    jj = find_nearest(lons, lon)
+    data = ds[var][:,ii,jj].to_dataframe()
+    data = data.drop(['lat', 'lon'], axis=1)
+
+    return data
+
 def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
-    df_out = pd.DataFrame(columns=['tas'])
+    df_tas = pd.DataFrame(columns=['tas'])
 
     st = int(slice.split("-")[0])
     for i in range(19):
@@ -36,19 +48,11 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
         if var == "tas":
             fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-            print(fn)
-            ds = xr.open_dataset(fn)
 
-            lats = ds.lat[:,0].values # 2D arrays, squeeze
-            lons = ds.lon[0,:].values # 2D arrays, squeeze
-            ii = find_nearest(lats, lat)
-            jj = find_nearest(lons, lon)
-            tas = ds.tas[:,ii,jj].to_dataframe()
-            tas = tas.drop(['lat', 'lon'], axis=1)
+         df = get_data(fn, var)
+         df_tas = df_tas.append(df)
 
-            df_out = df_out.append(tas)
-
-    df_out.to_csv("tas.csv", index=False)
+    df_tas.to_csv("tas.csv", index=True)
 
     sys.exit()
 
