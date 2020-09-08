@@ -149,13 +149,13 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     # Last two values are missing due to shift
     #df_out["LWdown"][-2] = df_out["LWdown"][-3]
     #df_out["LWdown"][-1] = df_out["LWdown"][-3]
-    df_out.loc[-2, "LWdown"] = df_out["LWdown"][-3]
-    df_out.loc[-1, "LWdown"] = df_out["LWdown"][-3]
+    df_out.ix[-2, "LWdown"] = df_out["LWdown"][-3]
+    df_out.ix[-1, "LWdown"] = df_out["LWdown"][-3]
 
     # Last two values are missing due to shift
     #df_out["SWdown"][-2] = 0.0
     #df_out["SWdown"][-1] = 0.0
-    df_out.loc[-1, "SWdown"] = 0.0
+    df_out.ix[-1, "SWdown"] = 0.0
 
     df_out.to_csv("test.csv", index=False)
 
