@@ -40,7 +40,8 @@ def get_data(fn, var):
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
-    cols = ['Tair','Qair','Precip']
+    #cols = ['Tair','Qair','Precip']
+    cols = ['Tair','Qair']
     nyears = 19
     df_out = pd.DataFrame(columns=cols)
 
@@ -57,13 +58,14 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df2 = get_data(fn, var)
 
-        var = "pracc" # precip
-        fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        df3 = get_data(fn, var)
+        #var = "pracc" # precip
+        #fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
+        #df3 = get_data(fn, var)
 
         # tas, huss, wss, rsds, rlds, pracc, ps
 
-        frames = [df1, df2, df3]
+        #frames = [df1, df2, df3]
+        frames = [df1, df2]
         result = pd.concat(frames)
         print(result)
         df_out = df_out.append(result)
