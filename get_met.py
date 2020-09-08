@@ -71,11 +71,13 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         result = pd.concat(frames)
 
         df_out = df_out.append(result)
-        
+        print(df_out)
+        sys.exit()
 
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
     df_out = df_out[cols]
+    df_out.rename(columns={'tas':'Tair', 'huss':'Qair'}, inplace=True)
     df_out.to_csv("test.csv", index=False)
 
     sys.exit()
