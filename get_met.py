@@ -81,7 +81,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         print("3-hourly interp")
         # We need to turn the 3hly data into hrly, linearly interpolate...
-        i = pd.DatetimeIndex(df1['wss'].index[0], df1['wss'].index[-1],
+        i = pd.DatetimeIndex(df1['tas'].index[0], df1['tas'].index[-1],
                              freq='H')
         df6 = df6.reindex(i).interpolate()
 
