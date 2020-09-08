@@ -64,8 +64,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         st += 1
 
-    print(dfx)
-
     print("3-hourly")
 
     # Radiation data is 3-hrly and concatenated into 5 year chunks...
@@ -82,7 +80,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
         df6 = get_data(fn, var)
 
-        print("3-hourly interp")
         # We need to turn the 3hly data into hrly, linearly interpolate...
         i = pd.date_range(start=df6['rlds'].index[0],
                           end=df6['rlds'].index[-1], freq='H')
@@ -101,14 +98,12 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         dfy = dfy.append(result)
         st += 5
 
-    print(dfy)
     # Join the hourly and the interpolated hourly data.
     frames = [dfx, dfy]
-    print(len(dfx), len(dfy))
     df_out = pd.concat(frames, axis=1)
 
     df_out['date'] = pd.to_datetime(df_out.index)
-    cols = ['date'] + cols
+    cols = ['date','tas','huss','pracc','wss','ps','rlds','rsds']
     df_out = df_out[cols]
     df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Precip',
                            'wss':'Wind', 'ps':'Psurf', 'rlds':'LWdown',
