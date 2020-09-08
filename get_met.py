@@ -74,15 +74,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df5 = get_data(fn, var)
 
-        var = "rlds" # LWdown
-        fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
-        df6 = get_data(fn, var)
-
-        i = pd.DatetimeIndex(start=df4['wss'].index[0],
-                             end=df4['wss'].index[-1], freq='H')
-        df6 = df6.reindex(i).interpolate()
-
-        frames = [df1, df2, df3, df4, df5, df6]
+        frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
 
         df_out = df_out.append(result)
