@@ -46,6 +46,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
     nyears = 20
     dfx = pd.DataFrame(columns=cols)
 
+    print("hourly")
     st = int(slice.split("-")[0])
     for i in range(nyears):
 
@@ -81,6 +82,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         st += 1
 
+    print("3-hourly")
+
     # Radiation data is 3-hrly and concatenated into 5 year chunks...
     cols = ['rlds','rsds']
     nyears = 4 # 5 year file segments
@@ -95,6 +98,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
         df6 = get_data(fn, var)
 
+        print("3-hourly interp")
         # We need to turn the 3hly data into hrly, linearly interpolate...
         i = pd.DatetimeIndex(start=df4['wss'].index[0],
                              end=df4['wss'].index[-1], freq='H')
