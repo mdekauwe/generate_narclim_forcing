@@ -22,7 +22,7 @@ import xarray as xr
 import pandas as pd
 
 
-def main(path, slice, GCM, RCM, domain, odir4, var):
+def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
     st = int(slice.split("-")[0])
     for i in range(19):
@@ -33,13 +33,18 @@ def main(path, slice, GCM, RCM, domain, odir4, var):
             fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
             print(fn)
             ds = xr.open_dataset(fn)
-            print(ds)
+            print(ds.lat.values[0:10,0])
+            print(ds.lon.values[0:10,0])
 
             sys.exit()
 
 
 
 if __name__ == "__main__":
+
+    # test loc -> Eucalyptus accedens,-29.25,114.75
+    lat = -29.25
+    lon = 144.75
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
@@ -74,4 +79,4 @@ if __name__ == "__main__":
                     os.makedirs(odir4)
 
                 path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-                main(path, slice, GCM, RCM, domain, odir4, var)
+                main(path, slice, GCM, RCM, domain, odir4, var, lat, lon)
