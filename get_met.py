@@ -37,8 +37,8 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
             print(fn)
             ds = xr.open_dataset(fn)
 
-            lats = ds.lat[:,0].values
-            lons = ds.lon[0,:].values
+            lats = ds.lat[:,0].values # 2D arrays, squeeze
+            lons = ds.lon[0,:].values # 2D arrays, squeeze
             ii = find_nearest(lats, lat)
             jj = find_nearest(lons, lon)
             tas = ds.tas[:,ii,jj].to_dataframe()
