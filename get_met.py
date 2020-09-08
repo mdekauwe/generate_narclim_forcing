@@ -38,15 +38,17 @@ def get_data(fn, var):
 
     return data
 
+
+
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
-    cols = ['tas','huss','pracc', 'wss', 'ps', 'rlds']
-    nyears = 19
+    cols = ['tas','huss','pracc', 'wss', 'ps']
+    nyears = 20
     df_out = pd.DataFrame(columns=cols)
 
     st = int(slice.split("-")[0])
     for i in range(nyears):
-        st += 1
+
         tag = "%d-%d" % (st, st)
 
         var = "tas" # air temp
@@ -85,6 +87,41 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         df_out = df_out.append(result)
 
+        st += 1
+
+    # Radiation data is 3-hrly and concatenated into 5 year chunks...
+    cols = ['rlds','rsds']
+    nyears = 4 # 5 year file segments
+    df_out2 = pd.DataFrame(columns=cols)
+
+    st = int(slice.split("-")[0])
+    for i in range(nyears):
+
+        tag = "%d-%d" % (st, st+4)
+
+        var = "rlds" # LWdown
+        fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
+        df6 = get_data(fn, var)
+
+        # We need to turn the 3hly data into hrly, linearly interpolate...
+        i = pd.DatetimeIndex(start=df4['wss'].index[0],
+                             end=df4['wss'].index[-1], freq='H')
+        df6 = df6.reindex(i).interpolate()
+
+        var = "rsds" # LWdown
+        fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
+        df7 = get_data(fn, var)
+
+        # We need to turn the 3hly data into hrly, linearly interpolate...
+        df7 = df7.reindex(i).interpolate()
+
+        frames = [df6, df7]
+        result = pd.concat(frames, axis=1)
+
+        df_out2 = df_out2.append(result)
+        st += 5
+
+    sys.exit()
 
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
