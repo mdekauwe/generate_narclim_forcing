@@ -52,14 +52,11 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df1 = get_data(fn, var)
-        print(df1)
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df2 = get_data(fn, var)
-        print(df2)
 
-        sys.exit()
         var = "pracc" # precip
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df3 = get_data(fn, var)
@@ -68,8 +65,11 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         frames = [df1, df2, df3]
         result = pd.concat(frames)
+        print(results)
         df_out = df_out.append(result)
-
+        print(df_out)
+        sys.exit()
+        
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date'] + cols
     df_out = df_out[cols]
