@@ -27,6 +27,8 @@ def find_nearest(a, b):
 
 def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
 
+    df_out = pd.DataFrame(columns=['tas'])
+
     st = int(slice.split("-")[0])
     for i in range(19):
         st += 1
@@ -42,10 +44,13 @@ def main(path, slice, GCM, RCM, domain, odir4, var, lat, lon):
             ii = find_nearest(lats, lat)
             jj = find_nearest(lons, lon)
             tas = ds.tas[:,ii,jj].to_dataframe()
+            tas = df.drop(['lat', 'lon'], axis=1)
 
-            sys.exit()
+            df_out = df_out.append(tas)
 
+    df_out.to_csv("tas.csv", index=False)
 
+    sys.exit()
 
 if __name__ == "__main__":
 
