@@ -79,8 +79,6 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         df4 = df4.shift(periods=10)
         df4[var][0:10] = df4[var][11] # fill the first NaNs we added
 
-        df4[var] = np.where(df4[var] > 10.0, 10.0, df4[var])
-
         var = "ps" # pressure
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df5 = get_data(fn, var)
