@@ -23,7 +23,7 @@ import pandas as pd
 import netCDF4 as nc
 import datetime
 
-def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
+def main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon, df_co2):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
@@ -141,8 +141,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
                            'rsds':'SWdown'},
                   inplace=True)
 
-    df_out.to_csv("test.csv", index=False)
-    out_fname = "test.nc"
+    #df_out.to_csv("test.csv", index=False)
+    out_fname = "narclim_met_%s_%.2f_%.2f.nc" % (spp, lat, lon)
     create_cable_nc_file(df_out, lat, lon, out_fname)
     sys.exit()
 
@@ -305,10 +305,6 @@ def get_data(fn, var):
 
 if __name__ == "__main__":
 
-    # test loc -> Eucalyptus accedens
-    lat = -29.07
-    lon = 114.87
-
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
@@ -350,8 +346,8 @@ if __name__ == "__main__":
 
                 for i in range(len(df_spp)):
                     spp = df_spp.species[i]
-                    lat = df_spp.lat[i]
-                    lon = df_spp.lon[i]
-                    print(spp, lat, lon)
-                    sys.exit()
-                main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2)
+                    lat = round(df_spp.lat[i], 2)
+                    lon = round(df_spp.lon[i], 2)
+
+                    main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
+                         df_co2)
