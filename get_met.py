@@ -89,11 +89,10 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
-        result = result.fillna(method='ffill')
 
-        if year == 1992:
-            result.to_csv("test.csv", index=False)
-            sys.exit()
+        # deal with leap year missing data, we will infill as one day isn't
+        # a key focus of our analysis
+        result = result.fillna(method='ffill')
 
         dfx = dfx.append(result)
 
@@ -134,6 +133,10 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         frames = [df6, df7]
         result = pd.concat(frames, axis=1)
+
+        # deal with leap year missing data, we will infill as one day isn't
+        # a key focus of our analysis
+        result = result.fillna(method='ffill')
 
         dfy = dfy.append(result)
         st += 5
