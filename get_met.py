@@ -91,9 +91,9 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         result = pd.concat(frames, axis=1)
 
         if year == 1992:
-            df_out.to_csv("test.csv", index=False)
+            result.to_csv("test.csv", index=False)
             sys.exit()
-            
+
         dfx = dfx.append(result)
 
         st += 1
