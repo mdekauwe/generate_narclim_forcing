@@ -280,7 +280,7 @@ def create_cable_nc_file(df, lat, lon, out_fname):
     CO2air[:,0,0] = df.CO2air.values.reshape(n_timesteps, ndim, ndim, ndim)
     za_tq[:] = 2.  # temp
     za_uv[:] = 10. # wind
-    elevation[0,0] = elev
+    #elevation[0,0] = elev
 
     f.close()
 
