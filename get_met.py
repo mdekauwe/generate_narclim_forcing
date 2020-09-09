@@ -348,6 +348,6 @@ if __name__ == "__main__":
                     spp = df_spp.species[i]
                     lat = round(df_spp.lat[i], 2)
                     lon = round(df_spp.lon[i], 2)
-
+                    print(i, spp)
                     main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
                          df_co2)
