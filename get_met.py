@@ -63,6 +63,9 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         # instead of 06:00:00), even though it is hourly, use the Qair index
         df3.index = df2.index
 
+        # units are kg m-2 accumulated over the hour, need to be kg m-2 s-1
+        df3[var] /= 3600.
+
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df3 = df3.shift(periods=10)
         df3[var][0:10] = 0.0 # fill the first NaNs we added
@@ -141,12 +144,12 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
                            'rsds':'SWdown'},
                   inplace=True)
 
-    df_out.to_csv("test.csv", index=False)
+    #df_out.to_csv("test.csv", index=False)
     out_fname = "narclim_met_%s_%d.nc" % (spp, count)
     out_fname = os.path.join(opath, out_fname)
     create_cable_nc_file(df_out, lat, lon, out_fname)
     sys.exit()
-    
+
 def create_cable_nc_file(df, lat, lon, out_fname):
 
     ndim = 1
