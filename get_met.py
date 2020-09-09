@@ -142,7 +142,7 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     df_out.to_csv("test.csv", index=False)
     out_fname = "test.nc"
-    create_cable_nc_file(df, lat, lon, out_fname)
+    create_cable_nc_file(df_out, lat, lon, out_fname)
     sys.exit()
 
 def create_cable_nc_file(df, lat, lon, out_fname):
