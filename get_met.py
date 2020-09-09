@@ -22,6 +22,7 @@ import xarray as xr
 import pandas as pd
 import netCDF4 as nc
 import datetime
+import optparse
 
 def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
@@ -306,8 +307,17 @@ def get_data(fn, var):
 
     return data
 
+def cmd_line_parser():
+
+    p = optparse.OptionParser()
+    p.add_option("-g", default="CCCMA3.1", help="gcm filename")
+    options, args = p.parse_args()
+
+    return (options.g)
 
 if __name__ == "__main__":
+
+    (GCM) = cmd_line_parser()
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
@@ -321,7 +331,7 @@ if __name__ == "__main__":
         os.makedirs(odir)
 
     time_slices = ["1990-2009", "2020-2039", "2060-2079"]
-    GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
+    #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
     RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
 
@@ -334,24 +344,24 @@ if __name__ == "__main__":
         if not os.path.exists(odir2):
             os.makedirs(odir2)
 
-        for GCM in GCMs:
+        #for GCM in GCMs:
 
-            odir3 = os.path.join(odir2, GCM)
-            if not os.path.exists(odir3):
-                os.makedirs(odir3)
+        odir3 = os.path.join(odir2, GCM)
+        if not os.path.exists(odir3):
+            os.makedirs(odir3)
 
-            for RCM in RCMs:
+        for RCM in RCMs:
 
-                odir4 = os.path.join(odir3, RCM)
-                if not os.path.exists(odir4):
-                    os.makedirs(odir4)
+            odir4 = os.path.join(odir3, RCM)
+            if not os.path.exists(odir4):
+                os.makedirs(odir4)
 
-                path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-                print(path)
-                for i in range(len(df_spp)):
-                    spp = df_spp.species[i]
-                    lat = round(df_spp.lat[i], 2)
-                    lon = round(df_spp.lon[i], 2)
-                    print(i, spp)
-                    main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
-                         df_co2, i)
+            path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
+            print(path)
+            for i in range(len(df_spp)):
+                spp = df_spp.species[i]
+                lat = round(df_spp.lat[i], 2)
+                lon = round(df_spp.lon[i], 2)
+                print(i, spp)
+                main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
+                     df_co2, i)
