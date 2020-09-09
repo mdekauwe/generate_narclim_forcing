@@ -344,7 +344,7 @@ if __name__ == "__main__":
                     os.makedirs(odir4)
 
                 path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-
+                print(path)
                 for i in range(len(df_spp)):
                     spp = df_spp.species[i]
                     lat = round(df_spp.lat[i], 2)
