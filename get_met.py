@@ -21,6 +21,7 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 import netCDF4 as nc
+import datetime
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
 
