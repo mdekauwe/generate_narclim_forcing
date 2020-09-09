@@ -22,7 +22,7 @@ import xarray as xr
 import pandas as pd
 import netCDF4 as nc
 
-def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
+def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps']
@@ -35,7 +35,10 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
         print("hourly: %d:%d" % (i, nyears))
         tag = "%d-%d" % (st, st)
-        print(st)
+        year = int(st)
+
+        co2 = df_co2[df_co2.Year == year].co2
+        print(co2)
         
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -315,7 +318,6 @@ if __name__ == "__main__":
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
-
     odir = "data"
     if not os.path.exists(odir):
         os.makedirs(odir)
@@ -347,4 +349,4 @@ if __name__ == "__main__":
                     os.makedirs(odir4)
 
                 path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-                main(path, slice, GCM, RCM, domain, odir4, lat, lon)
+                main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2)
