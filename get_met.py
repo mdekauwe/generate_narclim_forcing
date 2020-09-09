@@ -37,9 +37,9 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
         tag = "%d-%d" % (st, st)
         year = int(st)
 
-        co2 = df_co2[df_co2.Year == year].co2
+        co2 = df_co2[df_co2.Year == year].co2.values[0]
         print(co2)
-        
+
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df1 = get_data(fn, var)
