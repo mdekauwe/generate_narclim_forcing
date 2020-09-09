@@ -144,6 +144,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
     # Join the hourly and the interpolated hourly data.
     frames = [dfx, dfy]
     df_out = pd.concat(frames, axis=1)
+    df_out = df_out.fillna(method='ffill')
 
     df_out['date'] = pd.to_datetime(df_out.index)
     cols = ['date','tas','huss','pracc','wss','ps','CO2air','rlds','rsds']
@@ -153,7 +154,8 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
                            'rsds':'SWdown'},
                   inplace=True)
 
-    #df_out.to_csv("test.csv", index=False)
+    df_out.to_csv("test.csv", index=False)
+
     out_fname = "narclim_met_%s_%d.nc" % (spp.replace(" ", "_"), count)
     out_fname = os.path.join(opath, out_fname)
     create_cable_nc_file(df_out, lat, lon, out_fname)
