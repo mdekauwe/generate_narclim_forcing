@@ -30,6 +30,8 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     nyears = 20
     st = int(slice.split("-")[0])
+    print(slice)
+    sys.exit()
     for i in range(nyears):
 
         print("hourly: %d:%d" % (i, nyears))
@@ -309,6 +311,10 @@ if __name__ == "__main__":
     lon = 114.87
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
+
+    df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
+    df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
+
 
     odir = "data"
     if not os.path.exists(odir):
