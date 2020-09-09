@@ -32,8 +32,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
     st = int(slice.split("-")[0])
 
     for i in range(nyears):
-
-        print("hourly: %d:%d" % (i, nyears))
         tag = "%d-%d" % (st, st)
         year = int(st)
 
@@ -91,9 +89,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
 
         st += 1
 
-
-    print("3-hourly")
-
     # Radiation data is 3-hrly and concatenated into 5 year chunks...
     cols = ['rlds','rsds']
     dfy = pd.DataFrame(columns=cols)
@@ -101,7 +96,6 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
     nyears = 4 # 5 year file segments
     st = int(slice.split("-")[0])
     for i in range(nyears):
-
         tag = "%d-%d" % (st, st+4)
 
         var = "rlds" # LWdown
@@ -319,6 +313,8 @@ if __name__ == "__main__":
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
+    df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+
     odir = "data"
     if not os.path.exists(odir):
         os.makedirs(odir)
@@ -350,4 +346,11 @@ if __name__ == "__main__":
                     os.makedirs(odir4)
 
                 path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
+
+                for i in range(len(df_spp)):
+                    spp = df_spp.species[i]
+                    lat = df_spp.lat[i]
+                    lon = df_spp.lon[i]
+                    print(spp, lat, lon)
+                    sys.exit()
                 main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2)
