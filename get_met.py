@@ -250,10 +250,15 @@ def create_cable_nc_file(df, lat, lon, out_fname):
     elevation.missing_value = -9999.
     elevation.long_name = "Site elevation above sea level" ;
 
-    za = f.createVariable('za', 'f8', ('y', 'x',))
-    za.units = "m"
-    za.missing_value = -9999.
-    za.long_name = "level of lowest atmospheric model layer"
+    za_tq = f.createVariable('za_tq', 'f8', ('y', 'x',))
+    za_tq.units = "m"
+    za_tq.missing_value = -9999.
+    za_tq.long_name = "level of lowest atmospheric model layer"
+
+    za_uv = f.createVariable('za_uv', 'f8', ('y', 'x',))
+    za_uv.units = "m"
+    za_uv.missing_value = -9999.
+    za_uv.long_name = "level of lowest atmospheric model layer"
 
     # write data to file
     x[:] = ndim
@@ -271,7 +276,8 @@ def create_cable_nc_file(df, lat, lon, out_fname):
     PSurf[:,0,0] = df.PSurf.values.reshape(n_timesteps, ndim, ndim)
     LWdown[:,0,0] = df.LWdown.values.reshape(n_timesteps, ndim, ndim)
     #CO2air[:,0,0] = df.CO2air.values.reshape(n_timesteps, ndim, ndim, ndim)
-    za[:] = 40.
+    za_tq[:] = 2.  # temp
+    za_uv[:] = 10. # wind
     elevation[0,0] = elev
 
     f.close()
