@@ -134,7 +134,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2):
     df_out = pd.concat(frames, axis=1)
 
     df_out['date'] = pd.to_datetime(df_out.index)
-    cols = ['date','tas','huss','pracc','wss','ps','rlds','rsds']
+    cols = ['date','tas','huss','pracc','wss','ps','CO2air','rlds','rsds']
     df_out = df_out[cols]
     df_out.rename(columns={'tas':'Tair', 'huss':'Qair', 'pracc':'Rainf',
                            'wss':'Wind', 'ps':'PSurf', 'rlds':'LWdown',
