@@ -25,7 +25,7 @@ import netCDF4 as nc
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
 
 
-    cols = ['tas','huss','pracc', 'wss', 'ps']
+    cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
     dfx = pd.DataFrame(columns=cols)
 
     nyears = 20
@@ -45,12 +45,9 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon, df_co2):
         df1 = df1.shift(periods=10)
         df1[var][0:10] = df1[var][11] # fill the first NaNs we added
 
-        print(df1)
-        print(" ")
+        # Add in CO2
         co2 = df_co2[df_co2.Year == year].co2.values[0]
         df1['CO2air'] = co2
-        print(df1)
-        sys.exit()
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -284,7 +281,7 @@ def create_cable_nc_file(df, lat, lon, out_fname):
     Wind[:,0,0,0] = df.Wind.values.reshape(n_timesteps, ndim, ndim, ndim)
     PSurf[:,0,0] = df.PSurf.values.reshape(n_timesteps, ndim, ndim)
     LWdown[:,0,0] = df.LWdown.values.reshape(n_timesteps, ndim, ndim)
-    #CO2air[:,0,0] = df.CO2air.values.reshape(n_timesteps, ndim, ndim, ndim)
+    CO2air[:,0,0] = df.CO2air.values.reshape(n_timesteps, ndim, ndim, ndim)
     za_tq[:] = 2.  # temp
     za_uv[:] = 10. # wind
     elevation[0,0] = elev
