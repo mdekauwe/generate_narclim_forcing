@@ -90,6 +90,10 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
 
+        if year == 1992:
+            df_out.to_csv("test.csv", index=False)
+            sys.exit()
+            
         dfx = dfx.append(result)
 
         st += 1
