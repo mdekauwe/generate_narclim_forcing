@@ -20,6 +20,7 @@ import os
 import numpy as np
 import xarray as xr
 import pandas as pd
+import netCDF4 as nc
 
 def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
@@ -140,8 +141,142 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
                   inplace=True)
 
     df_out.to_csv("test.csv", index=False)
-
+    out_fname = "test.nc"
+    create_cable_nc_file(df, lat, lon, out_fname)
     sys.exit()
+
+def create_cable_nc_file(df, lat, lon, out_fname):
+
+    ndim = 1
+    n_timesteps = len(df)
+    times = []
+    secs = 0.0
+    for i in range(n_timesteps):
+        times.append(secs)
+        secs += 3600.
+
+    # create file and write global attributes
+    f = nc.Dataset(out_fname, 'w', format='NETCDF4')
+    f.description = 'NARCLIM met data, created by Martin De Kauwe'
+    f.history = "Created by: %s" % (os.path.basename(__file__))
+    f.creation_date = "%s" % (datetime.datetime.now())
+    f.contact = "mdekauwe@gmail.com"
+
+    # set dimensions
+    f.createDimension('time', None)
+    f.createDimension('z', ndim)
+    f.createDimension('y', ndim)
+    f.createDimension('x', ndim)
+    #f.Conventions = "CF-1.0"
+
+    # create variables
+    time = f.createVariable('time', 'f8', ('time',))
+    time.units = "seconds since %s 00:00:00" % (df.index[0])
+    time.long_name = "time"
+    time.calendar = "standard"
+
+    z = f.createVariable('z', 'f8', ('z',))
+    z.long_name = "z"
+    z.long_name = "z dimension"
+
+    y = f.createVariable('y', 'f8', ('y',))
+    y.long_name = "y"
+    y.long_name = "y dimension"
+
+    x = f.createVariable('x', 'f8', ('x',))
+    x.long_name = "x"
+    x.long_name = "x dimension"
+
+    latitude = f.createVariable('latitude', 'f8', ('y', 'x',))
+    latitude.units = "degrees_north"
+    latitude.missing_value = -9999.
+    latitude.long_name = "Latitude"
+
+    longitude = f.createVariable('longitude', 'f8', ('y', 'x',))
+    longitude.units = "degrees_east"
+    longitude.missing_value = -9999.
+    longitude.long_name = "Longitude"
+
+    SWdown = f.createVariable('SWdown', 'f8', ('time', 'y', 'x',))
+    SWdown.units = "W/m^2"
+    SWdown.missing_value = -9999.
+    SWdown.long_name = "Surface incident shortwave radiation"
+    SWdown.CF_name = "surface_downwelling_shortwave_flux_in_air"
+
+    Tair = f.createVariable('Tair', 'f8', ('time', 'z', 'y', 'x',))
+    Tair.units = "K"
+    Tair.missing_value = -9999.
+    Tair.long_name = "Near surface air temperature"
+    Tair.CF_name = "surface_temperature"
+
+    Rainf = f.createVariable('Rainf', 'f8', ('time', 'y', 'x',))
+    Rainf.units = "mm/s"
+    Rainf.missing_value = -9999.
+    Rainf.long_name = "Rainfall rate"
+    Rainf.CF_name = "precipitation_flux"
+
+    Qair = f.createVariable('Qair', 'f8', ('time', 'z', 'y', 'x',))
+    Qair.units = "kg/kg"
+    Qair.missing_value = -9999.
+    Qair.long_name = "Near surface specific humidity"
+    Qair.CF_name = "surface_specific_humidity"
+
+    Wind = f.createVariable('Wind', 'f8', ('time', 'z', 'y', 'x',))
+    Wind.units = "m/s"
+    Wind.missing_value = -9999.
+    Wind.long_name = "Scalar windspeed" ;
+    Wind.CF_name = "wind_speed"
+
+    PSurf = f.createVariable('PSurf', 'f8', ('time', 'y', 'x',))
+    PSurf.units = "Pa"
+    PSurf.missing_value = -9999.
+    PSurf.long_name = "Surface air pressure"
+    PSurf.CF_name = "surface_air_pressure"
+
+    LWdown = f.createVariable('LWdown', 'f8', ('time', 'y', 'x',))
+    LWdown.units = "W/m^2"
+    LWdown.missing_value = -9999.
+    LWdown.long_name = "Surface incident longwave radiation"
+    LWdown.CF_name = "surface_downwelling_longwave_flux_in_air"
+
+    CO2air = f.createVariable('CO2air', 'f8', ('time', 'z', 'y', 'x',))
+    CO2air.units = "ppm"
+    CO2air.missing_value = -9999.
+    CO2air.long_name = ""
+    CO2air.CF_name = ""
+
+    elevation = f.createVariable('elevation', 'f8', ('y', 'x',))
+    elevation.units = "m" ;
+    elevation.missing_value = -9999.
+    elevation.long_name = "Site elevation above sea level" ;
+
+    za = f.createVariable('za', 'f8', ('y', 'x',))
+    za.units = "m"
+    za.missing_value = -9999.
+    za.long_name = "level of lowest atmospheric model layer"
+
+    # write data to file
+    x[:] = ndim
+    y[:] = ndim
+    z[:] = ndim
+    time[:] = times
+    latitude[:] = lat
+    longitude[:] = lon
+
+    SWdown[:,0,0] = df.SWdown.values.reshape(n_timesteps, ndim, ndim)
+    Tair[:,0,0,0] = df.Tair.values.reshape(n_timesteps, ndim, ndim, ndim)
+    Rainf[:,0,0] = df.Rainf.values.reshape(n_timesteps, ndim, ndim)
+    Qair[:,0,0,0] = df.Qair.values.reshape(n_timesteps, ndim, ndim, ndim)
+    Wind[:,0,0,0] = df.Wind.values.reshape(n_timesteps, ndim, ndim, ndim)
+    PSurf[:,0,0] = df.PSurf.values.reshape(n_timesteps, ndim, ndim)
+    LWdown[:,0,0] = df.LWdown.values.reshape(n_timesteps, ndim, ndim)
+    #CO2air[:,0,0] = df.CO2air.values.reshape(n_timesteps, ndim, ndim, ndim)
+    za[:] = 40.
+    elevation[0,0] = elev
+
+    f.close()
+
+
 
 def find_nearest(a, b):
     idx = np.argmin(np.abs(a-b))
