@@ -145,7 +145,6 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2):
     out_fname = "narclim_met_%s_%.2f_%.2f.nc" % (spp, lat, lon)
     out_fname = os.path.join(opath, out_fname)
     create_cable_nc_file(df_out, lat, lon, out_fname)
-    sys.exit()
 
 def create_cable_nc_file(df, lat, lon, out_fname):
 
