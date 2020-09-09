@@ -42,8 +42,8 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         df1 = get_data(fn, var)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
-        #df1 = df1.shift(periods=10)
-        #df1[var][0:10] = df1[var][11] # fill the first NaNs we added
+        df1 = df1.shift(periods=10)
+        df1[var][0:10] = df1[var][11] # fill the first NaNs we added
 
         # Add in CO2
         co2 = df_co2[df_co2.Year == year].co2.values[0]
@@ -54,8 +54,8 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         df2 = get_data(fn, var)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
-        #df2= df2.shift(periods=10)
-        #df2[var][0:10] = df2[var][11] # fill the first NaNs we added
+        df2= df2.shift(periods=10)
+        df2[var][0:10] = df2[var][11] # fill the first NaNs we added
 
         var = "pracc" # precip
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -68,27 +68,28 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         df3[var] /= 3600.
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
-        #df3 = df3.shift(periods=10)
-        #df3[var][0:10] = 0.0 # fill the first NaNs we added
+        df3 = df3.shift(periods=10)
+        df3[var][0:10] = 0.0 # fill the first NaNs we added
 
         var = "wss" # wind
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df4 = get_data(fn, var)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
-        #df4 = df4.shift(periods=10)
-        #df4[var][0:10] = df4[var][11] # fill the first NaNs we added
+        df4 = df4.shift(periods=10)
+        df4[var][0:10] = df4[var][11] # fill the first NaNs we added
 
         var = "ps" # pressure
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df5 = get_data(fn, var)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
-        #df5 = df5.shift(periods=10)
-        #df5[var][0:10] = df5[var][11] # fill the first NaNs we added
+        df5 = df5.shift(periods=10)
+        df5[var][0:10] = df5[var][11] # fill the first NaNs we added
 
         frames = [df1, df2, df3, df4, df5]
         result = pd.concat(frames, axis=1)
+        result = result.fillna(method='ffill')
 
         if year == 1992:
             result.to_csv("test.csv", index=False)
