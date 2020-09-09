@@ -23,7 +23,7 @@ import pandas as pd
 import netCDF4 as nc
 import datetime
 
-def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2):
+def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
@@ -142,7 +142,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2):
                   inplace=True)
 
     #df_out.to_csv("test.csv", index=False)
-    out_fname = "narclim_met_%s_%.2f_%.2f.nc" % (spp, lat, lon)
+    out_fname = "narclim_met_%s_%d.nc" % (spp, count)
     out_fname = os.path.join(opath, out_fname)
     create_cable_nc_file(df_out, lat, lon, out_fname)
 
@@ -350,4 +350,4 @@ if __name__ == "__main__":
                     lon = round(df_spp.lon[i], 2)
                     print(i, spp)
                     main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
-                         df_co2)
+                         df_co2, i)
