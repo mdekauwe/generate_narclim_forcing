@@ -30,13 +30,13 @@ def main(path, slice, GCM, RCM, domain, odir4, lat, lon):
 
     nyears = 20
     st = int(slice.split("-")[0])
-    print(slice)
-    sys.exit()
+
     for i in range(nyears):
 
         print("hourly: %d:%d" % (i, nyears))
         tag = "%d-%d" % (st, st)
-
+        print(st)
+        
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
         df1 = get_data(fn, var)
