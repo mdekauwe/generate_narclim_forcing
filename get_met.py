@@ -23,7 +23,7 @@ import pandas as pd
 import netCDF4 as nc
 import datetime
 
-def main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon, df_co2):
+def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
@@ -143,6 +143,7 @@ def main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon, df_co2):
 
     #df_out.to_csv("test.csv", index=False)
     out_fname = "narclim_met_%s_%.2f_%.2f.nc" % (spp, lat, lon)
+    out_fname = os.path.join(opath, out_fname)
     create_cable_nc_file(df_out, lat, lon, out_fname)
     sys.exit()
 
