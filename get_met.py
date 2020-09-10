@@ -154,12 +154,12 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
                            'rsds':'SWdown'},
                   inplace=True)
 
-    df_out.to_csv("test.csv", index=False)
+    #df_out.to_csv("test.csv", index=False)
 
     out_fname = "narclim_met_%s_%d.nc" % (spp.replace(" ", "_"), count)
     out_fname = os.path.join(opath, out_fname)
     create_cable_nc_file(df_out, lat, lon, out_fname)
-    sys.exit()
+    #sys.exit()
 
 def create_cable_nc_file(df, lat, lon, out_fname):
 
