@@ -38,12 +38,12 @@ def main(time_slice, GCMs, RCMs):
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        map = np.mean(dfa.Rainf.values)
-                        
+                        map = np.mean(dfa.Rainf.mean())
+                        cov = None
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
-                        map = None
-                        cov = None
+
+
                         print(fn)
                         print(num, spp, map)
                         sys.exit()
