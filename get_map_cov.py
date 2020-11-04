@@ -37,9 +37,11 @@ def main(time_slice, GCMs, RCMs):
 
                     try:
                         df = read_cable_file(fn)
-
-                        num = os.path.basename(fn).split("_")[-1]
-                        spp = os.path.basename(fn).split("_")[-2]
+                        dfa = df.resample("A").agg("sum")
+                        print(dfa.Rainf.values)
+                        sys.exit()
+                        num = os.path.basename(fn).split("_")[-1].split(".")[0]
+                        spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
                         map = None
                         cov = None
                         print(fn)
@@ -75,6 +77,8 @@ def read_cable_file(fname):
         freq = "30M"
     else:
         raise("Time problem")
+
+    ds['Rainf'] *= float(time_jump)
 
     units, reference_date = ds.time.attrs['units'].split('since')
     df = ds[vars_to_keep].squeeze(dim=["x","y"], drop=True).to_dataframe()
