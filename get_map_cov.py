@@ -21,6 +21,7 @@ import datetime
 import os
 import glob
 from optparse import OptionParser
+from scipy.stats.mstats import variation
 
 def main(time_slice, GCMs, RCMs):
 
@@ -38,17 +39,10 @@ def main(time_slice, GCMs, RCMs):
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        map = np.mean(dfa.Rainf.mean())
-                        cov = None
+                        map = np.mean(dfa.Rainf.values())
+                        cov = variation(dfa.Rainf.values())
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
-
-
-                        print(fn)
-                        print(num, spp, map)
-                        sys.exit()
-                        #plc_mean = np.mean(df.resample("D").agg("mean").values)
-                        #plc_max = np.max(df.resample("D").agg("max").values)
 
                         rows.append([GCM, RCM, time_slice, spp, \
                                      num, map, cov])
