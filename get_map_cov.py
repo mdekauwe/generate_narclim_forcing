@@ -38,15 +38,14 @@ def main(time_slice, GCMs, RCMs):
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        print(dfa.Rainf.values)
-                        sys.exit()
+                        map = np.mean(dfa.Rainf.values)
+                        
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
                         map = None
                         cov = None
                         print(fn)
-                        print(num)
-                        print(spp)
+                        print(num, spp, map)
                         sys.exit()
                         #plc_mean = np.mean(df.resample("D").agg("mean").values)
                         #plc_max = np.max(df.resample("D").agg("max").values)
