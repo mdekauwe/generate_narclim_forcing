@@ -30,35 +30,32 @@ def main(time_slice, GCMs, RCMs):
         for RCM in RCMs:
             #print(GCM, RCM)
 
-            for spp in species:
-                spp = spp.replace(" ", "_")
+            path = "data/%s/%s/%s" % (time_slice, GCM, RCM)
+            files = glob.glob(os.path.join(path, '*.nc'))
+            if len(files) > 0:
+                for fn in files:
+                    print(fn)
+                    try:
+                        df = read_cable_file(fn)
 
-                path = "data/%s/%s/%s" % (time_slice, GCM, RCM)
-                files = glob.glob(os.path.join(path, '*.nc'))
-                if len(files) > 0:
-                    for fn in files:
+                        num = os.path.basename(fn).split("_")[-3]
+
+                        map = None
+                        cov = None
                         print(fn)
-                        try:
-                            df = read_cable_file(fn)
+                        print(num)
+                        sys.exit()
+                        #plc_mean = np.mean(df.resample("D").agg("mean").values)
+                        #plc_max = np.max(df.resample("D").agg("max").values)
 
-                            num = os.path.basename(fn).split("_")[-3]
-
-                            map = None
-                            cov = None
-                            print(fn)
-                            print(num)
-                            sys.exit()
-                            #plc_mean = np.mean(df.resample("D").agg("mean").values)
-                            #plc_max = np.max(df.resample("D").agg("max").values)
-
-                            rows.append([GCM, RCM, time_slice, spp, \
-                                         num, map, cov])
-                        except:
-                            rows.append([GCM, RCM, time_slice, spp, \
-                                         -999.9, -999.9, -999.9])
-                else:
-                    rows.append([GCM, RCM, time_slice, spp, \
-                                 -999.9, -999.9, -999.9])
+                        rows.append([GCM, RCM, time_slice, spp, \
+                                     num, map, cov])
+                    except:
+                        rows.append([GCM, RCM, time_slice, spp, \
+                                     -999.9, -999.9, -999.9])
+            else:
+                rows.append([GCM, RCM, time_slice, spp, \
+                             -999.9, -999.9, -999.9])
     df_out = pd.DataFrame(rows,
                           columns=['gcm','rcm','time','species',\
                                    'num', 'map','cov'])
