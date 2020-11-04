@@ -34,11 +34,11 @@ def main(time_slice, GCMs, RCMs):
             files = glob.glob(os.path.join(path, '*.nc'))
             if len(files) > 0:
                 for fn in files:
-                    print(fn)
+
                     try:
                         df = read_cable_file(fn)
 
-                        num = os.path.basename(fn).split("_")[-3]
+                        num = os.path.basename(fn).split("_")[-2]
 
                         map = None
                         cov = None
