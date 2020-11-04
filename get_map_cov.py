@@ -38,12 +38,13 @@ def main(time_slice, GCMs, RCMs):
                     try:
                         df = read_cable_file(fn)
 
-                        num = os.path.basename(fn).split("_")[-2]
-
+                        num = os.path.basename(fn).split("_")[-1]
+                        spp = os.path.basename(fn).split("_")[-2]
                         map = None
                         cov = None
                         print(fn)
                         print(num)
+                        print(spp)
                         sys.exit()
                         #plc_mean = np.mean(df.resample("D").agg("mean").values)
                         #plc_max = np.max(df.resample("D").agg("max").values)
@@ -51,10 +52,10 @@ def main(time_slice, GCMs, RCMs):
                         rows.append([GCM, RCM, time_slice, spp, \
                                      num, map, cov])
                     except:
-                        rows.append([GCM, RCM, time_slice, spp, \
+                        rows.append([GCM, RCM, time_slice, -999.9, \
                                      -999.9, -999.9, -999.9])
             else:
-                rows.append([GCM, RCM, time_slice, spp, \
+                rows.append([GCM, RCM, time_slice, -999.9, \
                              -999.9, -999.9, -999.9])
     df_out = pd.DataFrame(rows,
                           columns=['gcm','rcm','time','species',\
