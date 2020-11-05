@@ -35,11 +35,12 @@ def main(time_slice, GCMs, RCMs):
             files = glob.glob(os.path.join(path, '*.nc'))
             if len(files) > 0:
                 for fn in files:
-
+                    print(fn)
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
                         map = np.mean(dfa.Rainf.values())
+                        print(map)
                         cov = variation(dfa.Rainf.values())
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
