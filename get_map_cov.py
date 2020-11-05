@@ -35,7 +35,20 @@ def main(time_slice, GCMs, RCMs):
             files = glob.glob(os.path.join(path, '*.nc'))
             if len(files) > 0:
                 for fn in files:
-                    print(fn)
+
+                    df = read_cable_file(fn)
+                    dfa = df.resample("A").agg("sum")
+                    map = np.mean(dfa.Rainf.values())
+                    
+                    cov = variation(dfa.Rainf.values())
+                    num = os.path.basename(fn).split("_")[-1].split(".")[0]
+                    spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
+
+                    rows.append([GCM, RCM, time_slice, spp, \
+                                 num, map, cov])
+                    print([GCM, RCM, time_slice, spp, \
+                                 num, map, cov])
+                    """
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
@@ -52,6 +65,8 @@ def main(time_slice, GCMs, RCMs):
                     except:
                         rows.append([GCM, RCM, time_slice, -999.9, \
                                      -999.9, -999.9, -999.9])
+
+                    """
             else:
                 rows.append([GCM, RCM, time_slice, -999.9, \
                              -999.9, -999.9, -999.9])
