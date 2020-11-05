@@ -46,6 +46,8 @@ def main(time_slice, GCMs, RCMs):
 
                         rows.append([GCM, RCM, time_slice, spp, \
                                      num, map, cov])
+                        print([GCM, RCM, time_slice, spp, \
+                                     num, map, cov])
                     except:
                         rows.append([GCM, RCM, time_slice, -999.9, \
                                      -999.9, -999.9, -999.9])
