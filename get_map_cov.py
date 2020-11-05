@@ -36,37 +36,22 @@ def main(time_slice, GCMs, RCMs):
             if len(files) > 0:
                 for fn in files:
 
-                    df = read_cable_file(fn)
-                    dfa = df.resample("A").agg("sum")
-                    map = dfa.Rainf.mean()
-                    
-                    cov = variation(dfa.Rainf)
-                    num = os.path.basename(fn).split("_")[-1].split(".")[0]
-                    spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
 
-                    rows.append([GCM, RCM, time_slice, spp, \
-                                 num, map, cov])
-                    print([GCM, RCM, time_slice, spp, \
-                                 num, map, cov])
-                    """
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        map = np.mean(dfa.Rainf.values())
-                        print(map)
-                        cov = variation(dfa.Rainf.values())
+                        map = dfa.Rainf.mean()
+                        cov = variation(dfa.Rainf)
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
 
                         rows.append([GCM, RCM, time_slice, spp, \
                                      num, map, cov])
-                        print([GCM, RCM, time_slice, spp, \
-                                     num, map, cov])
                     except:
                         rows.append([GCM, RCM, time_slice, -999.9, \
                                      -999.9, -999.9, -999.9])
 
-                    """
+                    
             else:
                 rows.append([GCM, RCM, time_slice, -999.9, \
                              -999.9, -999.9, -999.9])
