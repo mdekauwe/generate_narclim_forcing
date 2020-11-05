@@ -40,7 +40,11 @@ def main(time_slice, GCMs, RCMs):
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        map = dfa.Rainf.mean()
+                        #map = dfa.Rainf.mean()
+
+                        # take first year to check
+                        map = dfa.Rainf.values()[0]
+
                         cov = variation(dfa.Rainf)
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
@@ -51,7 +55,7 @@ def main(time_slice, GCMs, RCMs):
                         rows.append([GCM, RCM, time_slice, -999.9, \
                                      -999.9, -999.9, -999.9])
 
-                    
+
             else:
                 rows.append([GCM, RCM, time_slice, -999.9, \
                              -999.9, -999.9, -999.9])

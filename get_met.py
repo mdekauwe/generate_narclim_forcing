@@ -4,11 +4,6 @@
 For each time slice, GCM, RCM loop through and collect up all the met data
 we need to generate a forcing file for CABLE-hydraulics simulations.
 
-TODO:
-- will need to get lat/lon pairs from euc species list.
-- add netcdf creation for output
-- need to interpolate some vars, e.g. tair is hourly, radiation is 3-hourly
-
 That's all folks.
 """
 __author__ = "Martin De Kauwe"
@@ -65,12 +60,12 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         df3.index = df2.index
 
         # units are kg m-2 accumulated over the hour, need to be kg m-2 s-1
-        #df3[var] /= 3600.
+        df3[var] /= 3600.
 
-        # it looks like they've aggregated half hour data based on the time
-        # stamp and the fact that the rainfall numbers look huge. Will need to
+        # is it possible they've aggregated half hour data based on the time
+        # stamp and the fact that the rainfall numbers look huge? Will need to
         # check, test this for now.
-        df3[var] /= 7200.
+        #df3[var] /= 7200.
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df3 = df3.shift(periods=10)
