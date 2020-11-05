@@ -39,7 +39,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "tas" # air temp
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        df1 = get_data(fn, var)
+        df1 = get_data(fn, var, lat, lon)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df1 = df1.shift(periods=10)
@@ -51,7 +51,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        df2 = get_data(fn, var)
+        df2 = get_data(fn, var, lat, lon)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df2= df2.shift(periods=10)
@@ -59,13 +59,18 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "pracc" # precip
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        df3 = get_data(fn, var)
+        df3 = get_data(fn, var, lat, lon)
         # someone has written the precip with a 30 min timestep (e.g. 06:30:00
         # instead of 06:00:00), even though it is hourly, use the Qair index
         df3.index = df2.index
 
         # units are kg m-2 accumulated over the hour, need to be kg m-2 s-1
-        df3[var] /= 3600.
+        #df3[var] /= 3600.
+
+        # it looks like they've aggregated half hour data based on the time
+        # stamp and the fact that the rainfall numbers look huge. Will need to
+        # check, test this for now.
+        df3[var] /= 7200.
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df3 = df3.shift(periods=10)
@@ -73,7 +78,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "wss" # wind
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        df4 = get_data(fn, var)
+        df4 = get_data(fn, var, lat, lon)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df4 = df4.shift(periods=10)
@@ -81,7 +86,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "ps" # pressure
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
-        df5 = get_data(fn, var)
+        df5 = get_data(fn, var, lat, lon)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df5 = df5.shift(periods=10)
@@ -109,7 +114,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "rlds" # LWdown
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
-        df6 = get_data(fn, var)
+        df6 = get_data(fn, var, lat, lon)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df6 = df6.shift(periods=10)
@@ -122,7 +127,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
 
         var = "rsds" # SWdown
         fn = os.path.join(path, "CCRC_NARCliM_03H_%s_%s.nc" % (tag, var))
-        df7 = get_data(fn, var)
+        df7 = get_data(fn, var, lat, lon)
 
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df7 = df7.shift(periods=10)
@@ -305,7 +310,7 @@ def find_nearest(a, b):
 
     return idx
 
-def get_data(fn, var):
+def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
     lats = ds.lat[:,0].values # 2D arrays, squeeze
     lons = ds.lon[0,:].values # 2D arrays, squeeze
