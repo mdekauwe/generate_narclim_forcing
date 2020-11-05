@@ -39,8 +39,8 @@ def main(time_slice, GCMs, RCMs):
                     df = read_cable_file(fn)
                     dfa = df.resample("A").agg("sum")
                     map = dfa.Rainf.mean()
-                    print(map)
-                    cov = variation(dfa.Rainf.values())
+                    
+                    cov = variation(dfa.Rainf)
                     num = os.path.basename(fn).split("_")[-1].split(".")[0]
                     spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
 
