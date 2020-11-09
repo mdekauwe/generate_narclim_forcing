@@ -29,7 +29,7 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
 
 
     # Get all bias corrected PPT files
-    files = glob.glob('bias_path/*_DAY_*_pracc_bc.nc')
+    files = glob.glob('%s/*_DAY_*_pracc_bc.nc' % (bias_path))
     print(files)
     sys.exit()
 
