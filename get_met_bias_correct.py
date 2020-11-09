@@ -330,8 +330,8 @@ if __name__ == "__main__":
 
     (GCM) = cmd_line_parser()
 
-    base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
-    base_path_bias = "/srv/ccrc/data30/z3393020/NARCliM/Bias_corrected/"
+    base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess"
+    base_path_bias = "/srv/ccrc/data30/z3393020/NARCliM/Bias_corrected"
 
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
@@ -344,6 +344,7 @@ if __name__ == "__main__":
         os.makedirs(odir)
 
     time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    time_slices_bias = ["1990-2010", "2020-2040", "2060-2080"]
     #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
     RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
@@ -351,7 +352,7 @@ if __name__ == "__main__":
     domain = domains[0] # whole of aus
 
 
-    for slice in time_slices:
+    for i,slice in enumerate(time_slices):
 
         odir2 = os.path.join(odir, slice)
         if not os.path.exists(odir2):
@@ -370,6 +371,8 @@ if __name__ == "__main__":
                 os.makedirs(odir4)
 
             path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
+
+            bias_slie = time_slices_bias[i]
             bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, GCM, RCM, slice, domain)
             print(path)
             print(bias_path)
