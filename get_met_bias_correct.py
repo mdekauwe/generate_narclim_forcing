@@ -333,7 +333,7 @@ def create_cable_nc_file(df, lat, lon, out_fname):
 
 
 def find_nearest(a, b):
-    idx = np.argmin(np.abs(a-b))
+    idx = np.argmin(np.abs(a-b[:,None]))
 
     return idx
 
