@@ -336,9 +336,8 @@ def create_cable_nc_file(df, lat, lon, out_fname):
 
 
 def find_nearest(a, b):
-    print(a.shape)
     idx = np.argmin(np.abs(a-b))
-    i = idx / a.shape[1]
+    i = int(idx / a.shape[1])
     j = idx % a.shape[1]
 
     return i, j
