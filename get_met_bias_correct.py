@@ -370,7 +370,7 @@ if __name__ == "__main__":
                 os.makedirs(odir4)
 
             path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-            bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, slice, GCM, RCM, domain)
+            bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, GCM, RCM, slice, domain)
             print(path)
             print(bias_path)
             for i in range(len(df_spp)):
