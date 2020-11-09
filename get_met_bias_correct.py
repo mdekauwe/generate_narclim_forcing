@@ -36,6 +36,7 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         dsx = xr.open_dataset(fn)
         lats = dsx.lat[:,0].values # 2D arrays, squeeze
         lons = dsx.lon[0,:].values # 2D arrays, squeeze
+        print(lat, lon)
         ii = find_nearest(lats, lat)
         jj = find_nearest(lons, lon)
         data = dsx['pracc_bc'][:,ii,jj].to_dataframe()
