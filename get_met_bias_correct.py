@@ -40,7 +40,10 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         lats = dsx.lat # 2D arrays, squeeze
         lons = dsx.lon # 2D arrays, squeeze
         print(lat, lon)
+        print(lats)
         ii = find_nearest(lats, lat)
+        print(ii)
+        sys.exit()
         jj = find_nearest(lons, lon)
         print(ii, jj)
         print(dsx['lat'][ii,jj].values)
@@ -333,7 +336,7 @@ def create_cable_nc_file(df, lat, lon, out_fname):
 
 
 def find_nearest(a, b):
-    idx = np.argmin(np.abs(a-b[:,None]))
+    idx = np.argmin(np.abs(a-b))
 
     return idx
 
