@@ -36,8 +36,9 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         dsx = xr.open_dataset(fn)
         lats = dsx.lat[:,0].values # 2D arrays, squeeze
         lons = dsx.lon[0,:].values # 2D arrays, squeeze
-
+        print(lats)
         print(lat, lon)
+        sys.exit()
         ii = find_nearest(lats, lat)
         jj = find_nearest(lons, lon)
         print(ii, jj)
@@ -338,8 +339,6 @@ def find_nearest(a, b):
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
     lats = ds.lat[:,0].values # 2D arrays, squeeze
-    print(lats)
-    sys.exit()
     lons = ds.lon[0,:].values # 2D arrays, squeeze
     ii = find_nearest(lats, lat)
     jj = find_nearest(lons, lon)
