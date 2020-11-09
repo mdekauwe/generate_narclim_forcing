@@ -372,8 +372,8 @@ if __name__ == "__main__":
 
             path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
 
-            bias_slie = time_slices_bias[i]
-            bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, GCM, RCM, slice, domain)
+            bias_slice = time_slices_bias[i]
+            bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, GCM, RCM, bias_slice, domain)
             print(path)
             print(bias_path)
             for i in range(len(df_spp)):
