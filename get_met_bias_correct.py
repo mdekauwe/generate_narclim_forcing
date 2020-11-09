@@ -37,8 +37,8 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         #lats = dsx.lat[:,0].values # 2D arrays, squeeze
         #lons = dsx.lon[0,:].values # 2D arrays, squeeze
 
-        lats = dsx.lat # 2D arrays, squeeze
-        lons = dsx.lon # 2D arrays, squeeze
+        lats = dsx.lat.values # 2D arrays, squeeze
+        lons = dsx.lon.values # 2D arrays, squeeze
         print(lat, lon)
 
         ii,jj = find_nearest(lats, lat)
