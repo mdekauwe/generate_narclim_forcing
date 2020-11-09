@@ -42,7 +42,7 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         data = data.drop(['lat', 'lon'], axis=1)
         dsx.close()
         individual_files.append(data)
-    modis_ds = xr.concat(individual_files, dim='time')
+    modis_ds = pd.concat(individual_files, dim='time')
 
     print(modis_ds)
     sys.exit()
