@@ -12,6 +12,7 @@ __email__ = "mdekauwe@gmail.com"
 
 import sys
 import os
+import glob
 import numpy as np
 import xarray as xr
 import pandas as pd
@@ -25,6 +26,13 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
     dfx = pd.DataFrame(columns=cols)
+
+
+    # Get all bias corrected PPT files
+    files = glob.glob('bias_path/*_DAY_*_pracc_bc.nc')
+    print(files)
+    sys.exit()
+
 
     nyears = 20
     st = int(slice.split("-")[0])
