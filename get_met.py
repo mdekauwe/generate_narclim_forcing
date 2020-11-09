@@ -332,7 +332,7 @@ def get_data(fn, var, lat, lon):
     #data = ds[var][:,ii,jj].to_dataframe()
 
     lats = ds.lat.values
-    lons = ds.lon.values 
+    lons = ds.lon.values
     ii, jj = find_nearest(lats, lat, lons, lon)
     data = ds[var][:,ii,jj].to_dataframe()
 
@@ -340,6 +340,16 @@ def get_data(fn, var, lat, lon):
     print(ii, jj)
     print(ds["lat"][ii,jj].values)
     print(ds["lon"][ii,jj].values)
+
+
+    lats = ds.lat[:,0].values # 2D arrays, squeeze
+    lons = ds.lon[0,:].values # 2D arrays, squeeze
+    ii = np.argmin(np.abs(lats-lat))
+    jj = np.argmin(np.abs(lons-lon))
+    print(ii, jj)
+    print(ds["lat"][ii,jj].values)
+    print(ds["lon"][ii,jj].values)
+    
     sys.exit()
 
     data = data.drop(['lat', 'lon'], axis=1)
