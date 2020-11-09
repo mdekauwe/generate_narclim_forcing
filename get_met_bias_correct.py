@@ -30,7 +30,21 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
 
     # Get all bias corrected PPT files
     files = glob.glob('%s/*_DAY_*_pracc_bc.nc' % (bias_path))
-    print(files)
+
+    individual_files = []
+    for fn in files:
+        dsx = xr.open_dataset(fn)
+        lats = ds.lat[:,0].values # 2D arrays, squeeze
+        lons = ds.lon[0,:].values # 2D arrays, squeeze
+        ii = find_nearest(lats, lat)
+        jj = find_nearest(lons, lon)
+        data = ds[var][:,ii,jj].to_dataframe()
+        data = data.drop(['lat', 'lon'], axis=1)
+        dsx.close()
+        individual_files.append(data)
+    modis_ds = xr.concat(individual_files, dim='time')
+
+    print(modis_ds)
     sys.exit()
 
 
