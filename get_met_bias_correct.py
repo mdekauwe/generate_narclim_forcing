@@ -40,14 +40,14 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         lats = dsx.lat # 2D arrays, squeeze
         lons = dsx.lon # 2D arrays, squeeze
         print(lat, lon)
-        print(lats)
-        ii = find_nearest(lats, lat)
-        print(ii)
-        sys.exit()
-        jj = find_nearest(lons, lon)
+
+        ii,jj = find_nearest(lats, lat)
         print(ii, jj)
+        iii, jjj = find_nearest(lons, lon)
+        print(iii, jjj)
         print(dsx['lat'][ii,jj].values)
-        print(dsx['lon'][ii,jj].values)
+        print(dsx['lon'][iii,jjj].values)
+        sys.exit()
         data = dsx['pracc_bc'][:,ii,jj].to_dataframe()
         data = data.drop(['lat', 'lon'], axis=1)
         print(np.nanmean(data.pracc_bc))
@@ -338,9 +338,10 @@ def create_cable_nc_file(df, lat, lon, out_fname):
 def find_nearest(a, b):
     print(a.shape)
     idx = np.argmin(np.abs(a-b))
-    print (idx / a.shape[1], idx % a.shape[1])
-    sys.exit()
-    return idx
+    i = idx / a.shape[1])
+    j = idx % a.shape[1]
+
+    return i, j
 
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
