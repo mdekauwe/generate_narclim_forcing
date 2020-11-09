@@ -40,7 +40,8 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         jj = find_nearest(lons, lon)
         data = dsx['pracc_bc'][:,ii,jj].to_dataframe()
         data = data.drop(['lat', 'lon'], axis=1)
-        print(data)
+        print(np.nanmean(data.pracc_bc))
+        sys.exit()
         dsx.close()
         individual_files.append(data)
     modis_ds = pd.concat(individual_files, axis=0)
@@ -397,7 +398,7 @@ if __name__ == "__main__":
 
             bias_slice = time_slices_bias[i]
             bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, GCM, RCM, bias_slice, domain)
-            
+
             for i in range(len(df_spp)):
                 spp = df_spp.species[i]
                 lat = round(df_spp.lat[i], 2)
