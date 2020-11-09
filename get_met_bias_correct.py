@@ -38,7 +38,7 @@ def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
         lons = ds.lon[0,:].values # 2D arrays, squeeze
         ii = find_nearest(lats, lat)
         jj = find_nearest(lons, lon)
-        data = ds[var][:,ii,jj].to_dataframe()
+        data = ds['pracc'][:,ii,jj].to_dataframe()
         data = data.drop(['lat', 'lon'], axis=1)
         dsx.close()
         individual_files.append(data)
