@@ -325,15 +325,17 @@ def find_nearest(lats, lat, lons, lon):
 
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
-    lats = ds.lat[:,0].values # 2D arrays, squeeze
-    lons = ds.lon[0,:].values # 2D arrays, squeeze
+    #lats = ds.lat[:,0].values # 2D arrays, squeeze
+    #lons = ds.lon[0,:].values # 2D arrays, squeeze
     #ii = find_nearest(lats, lat)
     #jj = find_nearest(lons, lon)
     #data = ds[var][:,ii,jj].to_dataframe()
 
+    lats = ds.lat.values
+    lons = ds.lon.values 
     ii, jj = find_nearest(lats, lat, lons, lon)
     data = ds[var][:,ii,jj].to_dataframe()
-    
+
     print(lat, lon)
     print(ii, jj)
     print(ds["lat"][ii,jj].values)
