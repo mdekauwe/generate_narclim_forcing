@@ -299,19 +299,47 @@ def create_cable_nc_file(df, lat, lon, out_fname):
     f.close()
 
 
+def find_nearest(lats, lat, lons, lon):
 
-def find_nearest(a, b):
-    idx = np.argmin(np.abs(a-b))
+    # how close each latitude and longitude is to the grid point we want
+    abs_lat = np.abs(lats-lat)
+    abs_lon = np.abs(lons-lon)
 
-    return idx
+    # combine results and finds the local maximum
+    c = np.maximum(abs_lon, abs_lat)
+
+    # fine matching grid point, nb in a flattened array
+    #latlon_idx = np.argmin(c)
+    #print(latlon_idx)
+
+
+    # get row, col in non-flattened array
+    xx, yy = np.where(c == np.min(c))
+
+    return xx[0], yy[0]
+
+#def find_nearest(a, b):
+#    idx = np.argmin(np.abs(a-b))
+#
+#    return idx
 
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
     lats = ds.lat[:,0].values # 2D arrays, squeeze
     lons = ds.lon[0,:].values # 2D arrays, squeeze
-    ii = find_nearest(lats, lat)
-    jj = find_nearest(lons, lon)
+    #ii = find_nearest(lats, lat)
+    #jj = find_nearest(lons, lon)
+    #data = ds[var][:,ii,jj].to_dataframe()
+
+    ii, jj = find_nearest(lats, lat, lons, lon)
     data = ds[var][:,ii,jj].to_dataframe()
+    
+    print(lat, lon)
+    print(ii, jj)
+    print(ds["lat"][ii,jj].values)
+    print(ds["lon"][ii,jj].values)
+    sys.exit()
+
     data = data.drop(['lat', 'lon'], axis=1)
     ds.close()
 
@@ -334,7 +362,8 @@ if __name__ == "__main__":
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
-    df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+    #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+    df_spp = pd.read_csv("test.csv")
 
     odir = "data"
     if not os.path.exists(odir):
