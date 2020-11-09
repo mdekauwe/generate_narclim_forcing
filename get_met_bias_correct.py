@@ -338,6 +338,7 @@ def find_nearest(a, b):
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
     lats = ds.lat[:,0].values # 2D arrays, squeeze
+    print(lats)
     lons = ds.lon[0,:].values # 2D arrays, squeeze
     ii = find_nearest(lats, lat)
     jj = find_nearest(lons, lon)
