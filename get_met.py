@@ -335,23 +335,6 @@ def get_data(fn, var, lat, lon):
     lons = ds.lon.values
     ii, jj = find_nearest(lats, lat, lons, lon)
     data = ds[var][:,ii,jj].to_dataframe()
-
-    print(lat, lon)
-    print(ii, jj)
-    print(ds["lat"][ii,jj].values)
-    print(ds["lon"][ii,jj].values)
-
-
-    lats = ds.lat[:,0].values # 2D arrays, squeeze
-    lons = ds.lon[0,:].values # 2D arrays, squeeze
-    ii = np.argmin(np.abs(lats-lat))
-    jj = np.argmin(np.abs(lons-lon))
-    print(ii, jj)
-    print(ds["lat"][ii,jj].values)
-    print(ds["lon"][ii,jj].values)
-    
-    sys.exit()
-
     data = data.drop(['lat', 'lon'], axis=1)
     ds.close()
 
@@ -374,8 +357,8 @@ if __name__ == "__main__":
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
-    #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
-    df_spp = pd.read_csv("test.csv")
+    df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+    #df_spp = pd.read_csv("test.csv")
 
     odir = "data"
     if not os.path.exists(odir):
