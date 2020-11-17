@@ -365,12 +365,12 @@ if __name__ == "__main__":
         os.makedirs(odir)
 
     #time_slices = ["1990-2009", "2020-2039", "2060-2079"]
-    time_slices = ["2020-2039"]
+    time_slices = ["2060-2079"]
     #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
     #RCMs = ["R1", "R2", "R3"]
 
     GCM = "ECHAM5"
-    RCMs = ["R3"]
+    RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
 
     domain = domains[0] # whole of aus
