@@ -370,7 +370,7 @@ if __name__ == "__main__":
     #RCMs = ["R1", "R2", "R3"]
 
     GCM = "CCCMA3.1"
-    RCMs = [R1", "R2", "R3"]
+    RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
 
     domain = domains[0] # whole of aus
