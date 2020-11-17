@@ -40,10 +40,10 @@ def main(time_slice, GCMs, RCMs):
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        #map = dfa.Rainf.mean()
+                        map = dfa.Rainf.mean()
 
                         # take first year to check
-                        map = dfa.Rainf.values()[0]
+                        #map = dfa.Rainf.values()[0]
 
                         cov = variation(dfa.Rainf)
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
