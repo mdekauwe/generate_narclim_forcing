@@ -334,7 +334,8 @@ if __name__ == "__main__":
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
-    df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+    #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+    df_spp = pd.read_csv("species_locations_sub_sampled_bounds.csv")
 
     odir = "data"
     if not os.path.exists(odir):
