@@ -36,11 +36,16 @@ def main(time_slice, GCMs, RCMs):
             if len(files) > 0:
                 for fn in files:
 
+
                     try:
                         df = read_cable_file(fn)
                         dfa = df.resample("A").agg("sum")
-                        map = np.mean(dfa.Rainf.values())
-                        cov = variation(dfa.Rainf.values())
+                        map = dfa.Rainf.mean()
+
+                        # take first year to check
+                        #map = dfa.Rainf.values()[0]
+
+                        cov = variation(dfa.Rainf)
                         num = os.path.basename(fn).split("_")[-1].split(".")[0]
                         spp = "%s %s" % ("Eucalyptus", os.path.basename(fn).split("_")[-2])
 
@@ -49,6 +54,8 @@ def main(time_slice, GCMs, RCMs):
                     except:
                         rows.append([GCM, RCM, time_slice, -999.9, \
                                      -999.9, -999.9, -999.9])
+
+
             else:
                 rows.append([GCM, RCM, time_slice, -999.9, \
                              -999.9, -999.9, -999.9])
@@ -84,8 +91,12 @@ def read_cable_file(fname):
 
 if __name__ == "__main__":
 
-    time_slices = ["1990-2009", "2020-2039", "2060-2079"]
-    GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
+    #time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
+    #RCMs = ["R1", "R2", "R3"]
+
+    time_slices = ["1990-2009"]
+    GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5"]
     RCMs = ["R1", "R2", "R3"]
 
     time_slice = time_slices[0]

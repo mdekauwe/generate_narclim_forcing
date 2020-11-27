@@ -350,22 +350,26 @@ def cmd_line_parser():
 
 if __name__ == "__main__":
 
-    (GCM) = cmd_line_parser()
+    #(GCM) = cmd_line_parser()
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
-    #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
-    df_spp = pd.read_csv("species_locations_sub_sampled_bounds.csv")
+    df_spp = pd.read_csv("species_locations_sub_sampled.csv")
+    #df_spp = pd.read_csv("test.csv")
 
     odir = "data"
     if not os.path.exists(odir):
         os.makedirs(odir)
 
-    time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    #time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    time_slices = ["2060-2079"]
     #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
+    #RCMs = ["R1", "R2", "R3"]
+
+    GCM = "ECHAM5"
     RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
 

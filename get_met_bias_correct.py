@@ -12,6 +12,7 @@ __email__ = "mdekauwe@gmail.com"
 
 import sys
 import os
+import glob
 import numpy as np
 import xarray as xr
 import pandas as pd
@@ -19,11 +20,45 @@ import netCDF4 as nc
 import datetime
 import optparse
 
-def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
+def main(path, bias_path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2,
+         count):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
     dfx = pd.DataFrame(columns=cols)
+
+
+    # Get all bias corrected PPT files
+    files = glob.glob('%s/*_DAY_*_pracc_bc.nc' % (bias_path))
+
+    individual_files = []
+    for fn in files:
+        dsx = xr.open_dataset(fn)
+        #lats = dsx.lat[:,0].values # 2D arrays, squeeze
+        #lons = dsx.lon[0,:].values # 2D arrays, squeeze
+
+        lats = dsx.lat.values # 2D arrays, squeeze
+        lons = dsx.lon.values # 2D arrays, squeeze
+        print(lat, lon)
+
+        ii,jj = find_nearest(lats, lat)
+        print(ii, jj)
+        iii, jjj = find_nearest(lons, lon)
+        print(iii, jjj)
+        print(dsx['lat'][ii,jj].values)
+        print(dsx['lon'][iii,jjj].values)
+        sys.exit()
+        data = dsx['pracc_bc'][:,ii,jj].to_dataframe()
+        data = data.drop(['lat', 'lon'], axis=1)
+        print(np.nanmean(data.pracc_bc))
+        sys.exit()
+        dsx.close()
+        individual_files.append(data)
+    modis_ds = pd.concat(individual_files, axis=0)
+
+    print(modis_ds)
+    sys.exit()
+
 
     nyears = 20
     st = int(slice.split("-")[0])
@@ -299,41 +334,20 @@ def create_cable_nc_file(df, lat, lon, out_fname):
     f.close()
 
 
-def find_nearest(lats, lat, lons, lon):
 
-    # how close each latitude and longitude is to the grid point we want
-    abs_lat = np.abs(lats-lat)
-    abs_lon = np.abs(lons-lon)
+def find_nearest(a, b):
+    idx = np.argmin(np.abs(a-b))
+    i = int(idx / a.shape[1])
+    j = idx % a.shape[1]
 
-    # combine results and finds the local maximum
-    c = np.maximum(abs_lon, abs_lat)
-
-    # fine matching grid point, nb in a flattened array
-    #latlon_idx = np.argmin(c)
-    #print(latlon_idx)
-
-
-    # get row, col in non-flattened array
-    xx, yy = np.where(c == np.min(c))
-
-    return xx[0], yy[0]
-
-#def find_nearest(a, b):
-#    idx = np.argmin(np.abs(a-b))
-#
-#    return idx
+    return i, j
 
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
-    #lats = ds.lat[:,0].values # 2D arrays, squeeze
-    #lons = ds.lon[0,:].values # 2D arrays, squeeze
-    #ii = find_nearest(lats, lat)
-    #jj = find_nearest(lons, lon)
-    #data = ds[var][:,ii,jj].to_dataframe()
-
-    lats = ds.lat.values
-    lons = ds.lon.values
-    ii, jj = find_nearest(lats, lat, lons, lon)
+    lats = ds.lat[:,0].values # 2D arrays, squeeze
+    lons = ds.lon[0,:].values # 2D arrays, squeeze
+    ii = find_nearest(lats, lat)
+    jj = find_nearest(lons, lon)
     data = ds[var][:,ii,jj].to_dataframe()
     data = data.drop(['lat', 'lon'], axis=1)
     ds.close()
@@ -352,19 +366,21 @@ if __name__ == "__main__":
 
     (GCM) = cmd_line_parser()
 
-    base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
+    base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess"
+    base_path_bias = "/srv/ccrc/data30/z3393020/NARCliM/Bias_corrected"
 
     df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
     df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
 
     #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
-    df_spp = pd.read_csv("species_locations_sub_sampled_bounds.csv")
+    df_spp = pd.read_csv("test.csv")
 
     odir = "data"
     if not os.path.exists(odir):
         os.makedirs(odir)
 
     time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    time_slices_bias = ["1990-2010", "2020-2040", "2060-2080"]
     #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
     RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
@@ -372,7 +388,7 @@ if __name__ == "__main__":
     domain = domains[0] # whole of aus
 
 
-    for slice in time_slices:
+    for i,slice in enumerate(time_slices):
 
         odir2 = os.path.join(odir, slice)
         if not os.path.exists(odir2):
@@ -391,11 +407,14 @@ if __name__ == "__main__":
                 os.makedirs(odir4)
 
             path = "%s/%s/%s/%s/%s" % (base_path, slice, GCM, RCM, domain)
-            print(path)
+
+            bias_slice = time_slices_bias[i]
+            bias_path = "%s/%s/%s/%s/%s" % (base_path_bias, GCM, RCM, bias_slice, domain)
+
             for i in range(len(df_spp)):
                 spp = df_spp.species[i]
                 lat = round(df_spp.lat[i], 2)
                 lon = round(df_spp.lon[i], 2)
                 print(i, spp)
-                main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
-                     df_co2, i)
+                main(path, bias_path, slice, GCM, RCM, domain, odir4, spp, lat,
+                     lon, df_co2, i)
