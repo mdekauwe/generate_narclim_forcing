@@ -19,7 +19,8 @@ import netCDF4 as nc
 import datetime
 import optparse
 
-def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
+def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count,
+         co2_vary=True):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
@@ -40,9 +41,12 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count):
         df1 = df1.shift(periods=10)
         df1[var][0:10] = df1[var][11] # fill the first NaNs we added
 
-        # Add in CO2
-        co2 = df_co2[df_co2.Year == year].co2.values[0]
-        df1['CO2air'] = co2
+        if co2_vary:
+            # Add in CO2
+            co2 = df_co2[df_co2.Year == year].co2.values[0]
+            df1['CO2air'] = co2
+        else:
+            df1['CO2air'] = 400.0
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -364,7 +368,8 @@ if __name__ == "__main__":
     if not os.path.exists(odir):
         os.makedirs(odir)
 
-    time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    #time_slices = ["1990-2009", "2020-2039", "2060-2079"]
+    time_slices = ["2020-2039", "2060-2079"]
     #GCMs = ["CCCMA3.1", "CSIRO-MK3.0", "ECHAM5", "MIROC3.2"]
     RCMs = ["R1", "R2", "R3"]
     domains = ['d01','d02']
@@ -398,4 +403,4 @@ if __name__ == "__main__":
                 lon = round(df_spp.lon[i], 2)
                 print(i, spp)
                 main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
-                     df_co2, i)
+                     df_co2, i, co2_vary=True)
