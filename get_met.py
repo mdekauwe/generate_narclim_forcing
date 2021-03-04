@@ -387,7 +387,7 @@ if __name__ == "__main__":
             os.makedirs(odir2)
 
         if co2_vary:
-            if slice == "1990-2009"
+            if slice == "1990-2009":
                 co2_conc = df_co2[0]
             elif slice == "2020-2039":
                 co2_conc = df_co2[1]
