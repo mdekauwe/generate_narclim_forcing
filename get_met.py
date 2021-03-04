@@ -19,8 +19,7 @@ import netCDF4 as nc
 import datetime
 import optparse
 
-def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count,
-         co2_vary=True):
+def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, co2_conc, count):
 
 
     cols = ['tas','huss','pracc', 'wss', 'ps', 'CO2air']
@@ -41,12 +40,12 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count,
         df1 = df1.shift(periods=10)
         df1[var][0:10] = df1[var][11] # fill the first NaNs we added
 
-        if co2_vary:
-            # Add in CO2
-            co2 = df_co2[df_co2.Year == year].co2.values[0]
-            df1['CO2air'] = co2
-        else:
-            df1['CO2air'] = 386.28 # 2009
+        #if co2_vary:
+        #    # Add in CO2
+        #    co2 = df_co2[df_co2.Year == year].co2.values[0]
+        #    df1['CO2air'] = co2
+        #else:
+        df1['CO2air'] = co2_conc
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -358,8 +357,11 @@ if __name__ == "__main__":
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
-    df_co2 = pd.read_csv("co2_ssp2_45.csv", sep=",")
-    df_co2.rename(columns={'CO2':'co2'}, inplace=True)
+    #df_co2 = pd.read_csv("co2_ssp2_45.csv", sep=",")
+    #df_co2.rename(columns={'CO2':'co2'}, inplace=True)
+
+    # 1990-2009; 2020-2039; 2040-2069 averages from ssp2.45
+    df_co2 = [368.932, 442.8715, 561.795]
 
     #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
     df_spp = pd.read_csv("species_locations_sub_sampled_bounds.csv")
@@ -376,12 +378,23 @@ if __name__ == "__main__":
 
     domain = domains[0] # whole of aus
 
+    co2_vary = True
 
     for slice in time_slices:
 
         odir2 = os.path.join(odir, slice)
         if not os.path.exists(odir2):
             os.makedirs(odir2)
+
+        if co2_vary:
+            if slice == "1990-2009"
+                co2_conc = df_co2[0]
+            elif slice == "2020-2039":
+                co2_conc = df_co2[1]
+            elif slice == "2060-2079":
+                co2_conc = df_co2[2]
+        else:
+            co2_conc = df_co2[0]
 
         #for GCM in GCMs:
 
@@ -403,4 +416,4 @@ if __name__ == "__main__":
                 lon = round(df_spp.lon[i], 2)
                 print(i, spp)
                 main(path, slice, GCM, RCM, domain, odir4, spp, lat, lon,
-                     df_co2, i, co2_vary=True)
+                     co2_conc, i)
