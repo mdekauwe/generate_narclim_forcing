@@ -65,11 +65,6 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, co2_conc, count):
         # units are kg m-2 accumulated over the hour, need to be kg m-2 s-1
         df3[var] /= 3600.
 
-        # is it possible they've aggregated half hour data based on the time
-        # stamp and the fact that the rainfall numbers look huge? Will need to
-        # check, test this for now.
-        #df3[var] /= 7200.
-
         # There is a time offset issue as it is in UTC, so need to +10 hours
         df3 = df3.shift(periods=10)
         df3[var][0:10] = 0.0 # fill the first NaNs we added
