@@ -46,7 +46,7 @@ def main(path, slice, GCM, RCM, domain, opath, spp, lat, lon, df_co2, count,
             co2 = df_co2[df_co2.Year == year].co2.values[0]
             df1['CO2air'] = co2
         else:
-            df1['CO2air'] = 400.0
+            df1['CO2air'] = 386.28 # 2009
 
         var = "huss" # Qair
         fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
@@ -358,8 +358,8 @@ if __name__ == "__main__":
 
     base_path = "/srv/ccrc/data30/z3393020/NARCliM/postprocess/"
 
-    df_co2 = pd.read_csv("AmaFACE_co2npdepforcing_1850_2100_AMB.csv", sep=";")
-    df_co2.rename(columns={'CO2 [ppm]':'co2'}, inplace=True)
+    df_co2 = pd.read_csv("co2_ssp2_45.csv", sep=",")
+    df_co2.rename(columns={'CO2':'co2'}, inplace=True)
 
     #df_spp = pd.read_csv("species_locations_sub_sampled.csv")
     df_spp = pd.read_csv("species_locations_sub_sampled_bounds.csv")
