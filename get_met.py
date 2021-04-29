@@ -373,7 +373,8 @@ if __name__ == "__main__":
 
     domain = domains[0] # whole of aus
 
-    co2_vary = True
+    #co2_vary = True
+    co2_vary = False # Remove CO2 response from drought response
 
     for slice in time_slices:
 
