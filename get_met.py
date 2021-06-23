@@ -185,7 +185,7 @@ def create_cable_nc_file(df, lat, lon, out_fname):
 
     # create variables
     time = f.createVariable('time', 'f8', ('time',))
-    time.units = "seconds since %s 00:00:00" % (df.index[0])
+    time.units = "seconds since %s" % (df.index[0])
     time.long_name = "time"
     time.calendar = "standard"
 
@@ -373,8 +373,8 @@ if __name__ == "__main__":
 
     domain = domains[0] # whole of aus
 
-    #co2_vary = True
-    co2_vary = False # Remove CO2 response from drought response
+    co2_vary = True
+    #co2_vary = False # Remove CO2 response from drought response
 
     for slice in time_slices:
 
