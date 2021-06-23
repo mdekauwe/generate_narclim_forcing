@@ -9,6 +9,30 @@ import netCDF4 as nc
 import datetime
 import optparse
 
+def find_nearest(lats, lat, lons, lon):
+
+    # how close each latitude and longitude is to the grid point we want
+    abs_lat = np.abs(lats-lat)
+    abs_lon = np.abs(lons-lon)
+
+    # combine results and finds the local maximum
+    c = np.maximum(abs_lon, abs_lat)
+
+    # fine matching grid point, nb in a flattened array
+    #latlon_idx = np.argmin(c)
+    #print(latlon_idx)
+
+
+    # get row, col in non-flattened array
+    xx, yy = np.where(c == np.min(c))
+
+    return xx[0], yy[0]
+
+#def find_nearest(a, b):
+#    idx = np.argmin(np.abs(a-b))
+#
+#    return idx
+
 def get_data(fn, var, lat, lon):
     ds = xr.open_dataset(fn)
     lats = ds.lat.values
@@ -38,5 +62,3 @@ for i in range(nyears):
     df3[var] /= 3600.
 
     print(df3[var])
-
-    
