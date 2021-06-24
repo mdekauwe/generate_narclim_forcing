@@ -52,6 +52,8 @@ st = int(slice.split("-")[0])
 # 72 Eucalyptus grandis,-21.081769,148.4178
 lat = -21.081769
 lon = 148.4178
+
+print("date,rainf")
 for i in range(nyears):
     tag = "%d-%d" % (st, st)
     year = int(st)
@@ -63,6 +65,6 @@ for i in range(nyears):
     #df3[var] /= 3600.
 
     for j in range(len(df3[var].values)):
-        print(year, df3[var].index[j], df3[var].values[j])
+        print("%s,%s" % (df3[var].index[j], df3[var].values[j]))
 
     st += 1
