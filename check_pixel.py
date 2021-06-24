@@ -59,6 +59,7 @@ for i in range(nyears):
     var = "pracc" # precip
     fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
     df3 = get_data(fn, var, lat, lon)
-    df3[var] /= 3600.
 
-    print(df3[var])
+    #df3[var] /= 3600.
+
+    print(df3[var].values)
