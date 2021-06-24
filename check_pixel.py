@@ -55,14 +55,14 @@ lon = 148.4178
 for i in range(nyears):
     tag = "%d-%d" % (st, st)
     year = int(st)
-    print(i, nyears, st)
+    #print(i, nyears, st)
     var = "pracc" # precip
     fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
     df3 = get_data(fn, var, lat, lon)
 
     #df3[var] /= 3600.
 
-    #for j in range(len(df3[var].values)):
-    #    print(df3[var].index[j], df3[var].values[j])
+    for j in range(len(df3[var].values)):
+        print(year, df3[var].index[j], df3[var].values[j])
 
     st += 1
