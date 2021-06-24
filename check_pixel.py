@@ -62,7 +62,7 @@ for i in range(nyears):
     fn = os.path.join(path, "CCRC_NARCliM_01H_%s_%s.nc" % (tag, var))
     df3 = get_data(fn, var, lat, lon)
 
-    df3[var] = df3[var].fillna(0.0
+    df3[var] = df3[var].fillna(0.0)
     #df3[var] /= 3600.
 
     for j in range(len(df3[var].values)):
