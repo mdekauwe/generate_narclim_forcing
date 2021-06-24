@@ -63,5 +63,4 @@ for i in range(nyears):
     #df3[var] /= 3600.
 
     for j in range(len(df3[var].values)):
-        print((df3[var].values[j])
-    p
+        print((df3[var].index[j], (df3[var].values[j])
