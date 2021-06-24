@@ -64,3 +64,5 @@ for i in range(nyears):
 
     for j in range(len(df3[var].values)):
         print(df3[var].index[j], df3[var].values[j])
+
+    st += 1
